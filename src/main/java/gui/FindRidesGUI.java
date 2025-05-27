@@ -4,7 +4,7 @@ import businessLogic.BLFacade;
 import configuration.UtilDate;
 
 import com.toedter.calendar.JCalendar;
-import domain.Ride;
+import domain.Product;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -175,11 +175,11 @@ public class FindRidesGUI extends JFrame {
 						tableModelRides.setColumnCount(4); // another column added to allocate ride objects
 
 						BLFacade facade = MainGUI.getBusinessLogic();
-						List<domain.Ride> rides=facade.getRides((String)jComboBoxOrigin.getSelectedItem(),(String)jComboBoxDestination.getSelectedItem(),UtilDate.trim(jCalendar1.getDate()));
+						List<domain.Product> rides=facade.getRides((String)jComboBoxOrigin.getSelectedItem(),(String)jComboBoxDestination.getSelectedItem(),UtilDate.trim(jCalendar1.getDate()));
 
 						if (rides.isEmpty() ) jLabelEvents.setText(ResourceBundle.getBundle("Etiquetas").getString("FindRidesGUI.NoRides")+ ": "+dateformat1.format(calendarAct.getTime()));
 						else jLabelEvents.setText(ResourceBundle.getBundle("Etiquetas").getString("FindRidesGUI.Rides")+ ": "+dateformat1.format(calendarAct.getTime()));
-						for (domain.Ride ride:rides){
+						for (domain.Product ride:rides){
 							Vector<Object> row = new Vector<Object>();
 							row.add(ride.getDriver().getName());
 							row.add(ride.getnPlaces());

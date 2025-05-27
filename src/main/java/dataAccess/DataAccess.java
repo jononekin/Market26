@@ -18,8 +18,8 @@ import javax.persistence.TypedQuery;
 
 import configuration.ConfigXML;
 import configuration.UtilDate;
-import domain.Driver;
-import domain.Ride;
+import domain.Seller;
+import domain.Product;
 import exceptions.RideAlreadyExistException;
 import exceptions.RideMustBeLaterThanTodayException;
 
@@ -80,9 +80,9 @@ public class DataAccess  {
 	    
 		   
 		    //Create drivers 
-			Driver driver1=new Driver("driver1@gmail.com","Aitor Fernandez");
-			Driver driver2=new Driver("driver2@gmail.com","Ane Gaztañaga");
-			Driver driver3=new Driver("driver3@gmail.com","Test driver");
+			Seller driver1=new Seller("driver1@gmail.com","Aitor Fernandez");
+			Seller driver2=new Seller("driver2@gmail.com","Ane Gaztañaga");
+			Seller driver3=new Seller("driver3@gmail.com","Test driver");
 
 			
 			//Create rides
@@ -149,7 +149,7 @@ public class DataAccess  {
 	 * @throws RideMustBeLaterThanTodayException if the ride date is before today 
  	 * @throws RideAlreadyExistException if the same ride already exists for the driver
 	 */
-	public Ride createRide(String from, String to, Date date, int nPlaces, float price, String driverEmail) throws  RideAlreadyExistException, RideMustBeLaterThanTodayException {
+	public Product createRide(String from, String to, Date date, int nPlaces, float price, String driverEmail) throws  RideAlreadyExistException, RideMustBeLaterThanTodayException {
 		System.out.println(">> DataAccess: createRide=> from= "+from+" to= "+to+" driver="+driverEmail+" date "+date);
 		try {
 			if(new Date().compareTo(date)>0) {
@@ -157,12 +157,12 @@ public class DataAccess  {
 			}
 			db.getTransaction().begin();
 			
-			Driver driver = db.find(Driver.class, driverEmail);
+			Seller driver = db.find(Seller.class, driverEmail);
 			if (driver.doesRideExists(from, to, date)) {
 				db.getTransaction().commit();
 				throw new RideAlreadyExistException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.RideAlreadyExist"));
 			}
-			Ride ride = driver.addRide(from, to, date, nPlaces, price);
+			Product ride = driver.addRide(from, to, date, nPlaces, price);
 			//next instruction can be obviated
 			db.persist(driver); 
 			db.getTransaction().commit();
@@ -185,16 +185,16 @@ public class DataAccess  {
 	 * @param date the date of the ride 
 	 * @return collection of rides
 	 */
-	public List<Ride> getRides(String from, String to, Date date) {
+	public List<Product> getRides(String from, String to, Date date) {
 		System.out.println(">> DataAccess: getRides=> from= "+from+" to= "+to+" date "+date);
 
-		List<Ride> res = new ArrayList<Ride>();	
-		TypedQuery<Ride> query = db.createQuery("SELECT r FROM Ride r WHERE r.from=?1 AND r.to=?2 AND r.date=?3",Ride.class);   
+		List<Product> res = new ArrayList<Product>();	
+		TypedQuery<Product> query = db.createQuery("SELECT r FROM Ride r WHERE r.from=?1 AND r.to=?2 AND r.date=?3",Product.class);   
 		query.setParameter(1, from);
 		query.setParameter(2, to);
 		query.setParameter(3, date);
-		List<Ride> rides = query.getResultList();
-	 	 for (Ride ride:rides){
+		List<Product> rides = query.getResultList();
+	 	 for (Product ride:rides){
 		   res.add(ride);
 		  }
 	 	return res;

@@ -15,16 +15,16 @@ import java.beans.PropertyChangeListener;
 
 import businessLogic.BLFacade;
 import configuration.UtilDate;
-import domain.Driver;
-import domain.Ride;
+import domain.Seller;
+import domain.Product;
 import exceptions.RideAlreadyExistException;
 import exceptions.RideMustBeLaterThanTodayException;
 
-public class CreateRideGUI extends JFrame {
+public class CreateProductGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	
-	private Driver driver;
+	private Seller driver;
 	private JTextField fieldOrigin=new JTextField();
 	private JTextField fieldDestination=new JTextField();
 	
@@ -53,7 +53,7 @@ public class CreateRideGUI extends JFrame {
 	private List<Date> datesWithEventsCurrentMonth;
 
 
-	public CreateRideGUI(Driver driver) {
+	public CreateProductGUI(Seller driver) {
 
 		this.driver=driver;
 		this.getContentPane().setLayout(null);
@@ -176,7 +176,7 @@ public class CreateRideGUI extends JFrame {
 				int inputSeats = Integer.parseInt(jTextFieldSeats.getText());
 				float price = Float.parseFloat(jTextFieldPrice.getText());
 
-				Ride r=facade.createRide(fieldOrigin.getText(), fieldDestination.getText(), UtilDate.trim(jCalendar.getDate()), inputSeats, price, driver.getEmail());
+				Product r=facade.createRide(fieldOrigin.getText(), fieldDestination.getText(), UtilDate.trim(jCalendar.getDate()), inputSeats, price, driver.getEmail());
 				jLabelMsg.setText(ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.RideCreated"));
 
 			} catch (RideMustBeLaterThanTodayException e1) {

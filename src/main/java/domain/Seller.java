@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
-public class Driver implements Serializable {
+public class Seller implements Serializable {
 	
 	/**
 	 * 
@@ -26,13 +26,13 @@ public class Driver implements Serializable {
 	private String name; 
 	@XmlIDREF
 	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
-	private List<Ride> rides=new Vector<Ride>();
+	private List<Product> rides=new Vector<Product>();
 
-	public Driver() {
+	public Seller() {
 		super();
 	}
 
-	public Driver(String email, String name) {
+	public Seller(String email, String name) {
 		this.email = email;
 		this.name = name;
 	}
@@ -67,8 +67,8 @@ public class Driver implements Serializable {
 	 * @param betMinimum of that question
 	 * @return Bet
 	 */
-	public Ride addRide(String from, String to, Date date, int nPlaces, float price)  {
-        Ride ride=new Ride(from,to,date,nPlaces,price, this);
+	public Product addProduct(String title, String description, String state, float price, String category, Date d)  {
+        Product ride=new Product(title,description, state, price,  d, this);
         rides.add(ride);
         return ride;
 	}
@@ -82,7 +82,7 @@ public class Driver implements Serializable {
 	 * @return true if the ride exists and false in other case
 	 */
 	public boolean doesRideExists(String from, String to, Date date)  {	
-		for (Ride r:rides)
+		for (Product r:rides)
 			if ( (java.util.Objects.equals(r.getFrom(),from)) && (java.util.Objects.equals(r.getTo(),to)) && (java.util.Objects.equals(r.getDate(),date)) )
 			 return true;
 		
@@ -97,16 +97,16 @@ public class Driver implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Driver other = (Driver) obj;
+		Seller other = (Seller) obj;
 		if (email != other.email)
 			return false;
 		return true;
 	}
 
-	public Ride removeRide(String from, String to, Date date) {
+	public Product removeRide(String from, String to, Date date) {
 		boolean found=false;
 		int index=0;
-		Ride r=null;
+		Product r=null;
 		while (!found && index<=rides.size()) {
 			r=rides.get(++index);
 			if ( (java.util.Objects.equals(r.getFrom(),from)) && (java.util.Objects.equals(r.getTo(),to)) && (java.util.Objects.equals(r.getDate(),date)) )

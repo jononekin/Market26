@@ -8,8 +8,8 @@ import javax.jws.WebService;
 
 import configuration.ConfigXML;
 import dataAccess.DataAccess;
-import domain.Ride;
-import domain.Driver;
+import domain.Product;
+import domain.Seller;
 import exceptions.RideMustBeLaterThanTodayException;
 import exceptions.RideAlreadyExistException;
 
@@ -70,10 +70,10 @@ public class BLFacadeImplementation  implements BLFacade {
 	 * {@inheritDoc}
 	 */
    @WebMethod
-   public Ride createRide( String from, String to, Date date, int nPlaces, float price, String driverEmail ) throws RideMustBeLaterThanTodayException, RideAlreadyExistException{
+   public Product createRide( String from, String to, Date date, int nPlaces, float price, String driverEmail ) throws RideMustBeLaterThanTodayException, RideAlreadyExistException{
 	   
 		dbManager.open();
-		Ride ride=dbManager.createRide(from, to, date, nPlaces, price, driverEmail);		
+		Product ride=dbManager.createRide(from, to, date, nPlaces, price, driverEmail);		
 		dbManager.close();
 		return ride;
    };
@@ -82,9 +82,9 @@ public class BLFacadeImplementation  implements BLFacade {
     * {@inheritDoc}
     */
 	@WebMethod 
-	public List<Ride> getRides(String from, String to, Date date){
+	public List<Product> getRides(String from, String to, Date date){
 		dbManager.open();
-		List<Ride>  rides=dbManager.getRides(from, to, date);
+		List<Product>  rides=dbManager.getRides(from, to, date);
 		dbManager.close();
 		return rides;
 	}

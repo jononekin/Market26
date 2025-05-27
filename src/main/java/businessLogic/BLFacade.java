@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 //import domain.Booking;
-import domain.Ride;
-import domain.Driver;
+import domain.Product;
+import domain.Seller;
 import exceptions.RideMustBeLaterThanTodayException;
 import exceptions.RideAlreadyExistException;
 
@@ -47,7 +47,7 @@ public interface BLFacade  {
  	 * @throws RideAlreadyExistException if the same ride already exists for the driver
 	 */
    @WebMethod
-   public Ride createRide( String from, String to, Date date, int nPlaces, float price, String driverEmail) throws RideMustBeLaterThanTodayException, RideAlreadyExistException;
+   public Product createRide( String from, String to, Date date, int nPlaces, float price, String driverEmail) throws RideMustBeLaterThanTodayException, RideAlreadyExistException;
 	
 	
 	/**
@@ -58,7 +58,7 @@ public interface BLFacade  {
 	 * @param date the date of the ride 
 	 * @return collection of rides
 	 */
-	@WebMethod public List<Ride> getRides(String from, String to, Date date);
+	@WebMethod public List<Product> getRides(String from, String to, Date date);
 	
 	/**
 	 * This method retrieves from the database the dates a month for which there are events

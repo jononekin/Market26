@@ -7,7 +7,7 @@ package gui;
 
 import javax.swing.*;
 
-import domain.Driver;
+import domain.Seller;
 import businessLogic.BLFacade;
 
 import java.awt.Color;
@@ -24,7 +24,7 @@ import java.awt.event.ActionEvent;
 
 public class MainGUI extends JFrame {
 	
-    private Driver driver;
+    private Seller driver;
 	private static final long serialVersionUID = 1L;
 
 	private JPanel jContentPane = null;
@@ -50,7 +50,7 @@ public class MainGUI extends JFrame {
 	/**
 	 * This is the default constructor
 	 */
-	public MainGUI(Driver d) {
+	public MainGUI(Seller d) {
 		super();
 
 		driver=d;
@@ -99,7 +99,7 @@ public class MainGUI extends JFrame {
 		jButtonCreateQuery.setText(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.CreateRide"));
 		jButtonCreateQuery.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				JFrame a = new CreateRideGUI(driver);
+				JFrame a = new CreateProductGUI(driver);
 				a.setVisible(true);
 			}
 		});
