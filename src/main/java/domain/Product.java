@@ -21,7 +21,7 @@ public class Product implements Serializable {
 	private Integer productNumber;
 	private String title;
 	private String description;
-	private String  status;
+	private int  status;
 	private String category;
 	private float price;
 	private Date publicationDate;
@@ -32,7 +32,7 @@ public class Product implements Serializable {
 		super();
 	}
 	
-	public Product(Integer productNumber, String title, String description, String status, String category, float price, Date pubDate, Seller seller) {
+	public Product(Integer productNumber, String title, String description, int status, String category, float price, Date pubDate, Seller seller) {
 		super();
 		this.productNumber = productNumber;
 		this.title = title;
@@ -46,7 +46,7 @@ public class Product implements Serializable {
 
 	
 
-	public Product(String title, String description, String status, String category, float price, Date pubDate, Seller seller) {
+	public Product(String title, String description, int status, String category, float price, Date pubDate, Seller seller) {
 		super();
 
 		this.title = title;
@@ -128,7 +128,7 @@ public class Product implements Serializable {
 	 */
 
 	
-	public String getStatus() {
+	public int getStatus() {
 		return status;
 	}
 
@@ -138,7 +138,7 @@ public class Product implements Serializable {
 	 * 
 	 * @param status to be set
 	 */	
-	public void setStatus(String status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 	

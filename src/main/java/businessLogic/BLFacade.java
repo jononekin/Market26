@@ -34,20 +34,18 @@ public interface BLFacade  {
 
 
 	/**
-	 * This method creates a ride for a driver
+	 * This method creates/adds a product to a seller
 	 * 
-	 * @param from the origin location of a ride
-	 * @param to the destination location of a ride
-	 * @param date the date of the ride 
-	 * @param nPlaces available seats
-	 * @param driver to which ride is added
-	 * 
-	 * @return the created ride, or null, or an exception
-	 * @throws RideMustBeLaterThanTodayException if the ride date is before today 
- 	 * @throws RideAlreadyExistException if the same ride already exists for the driver
+	 * @param title of the product
+	 * @param description of the product
+	 * @param status 
+	 * @param selling price
+	 * @param category of a product
+	 * @param publicationDate
+	 * @return Product
 	 */
    @WebMethod
-   public Product createRide( String from, String to, Date date, int nPlaces, float price, String driverEmail) throws RideMustBeLaterThanTodayException, RideAlreadyExistException;
+	public Product createProduct(String title, String description, int status, float price, String category, Date date, String sellerEmail) throws  RideAlreadyExistException, RideMustBeLaterThanTodayException;
 	
 	
 	/**

@@ -72,37 +72,42 @@ public class DataAccess  {
 
 		try {
 
-		   Calendar today = Calendar.getInstance();
+		   //Calendar today = Calendar.getInstance();
 		   
-		   int month=today.get(Calendar.MONTH);
-		   int year=today.get(Calendar.YEAR);
-		   if (month==12) { month=1; year+=1;}  
+		  // int month=today.get(Calendar.MONTH);
+		   //int year=today.get(Calendar.YEAR);
+		   //if (month==12) { month=1; year+=1;}  
 	    
 		   
-		    //Create drivers 
-			Seller driver1=new Seller("driver1@gmail.com","Aitor Fernandez");
-			Seller driver2=new Seller("driver2@gmail.com","Ane Gaztañaga");
-			Seller driver3=new Seller("driver3@gmail.com","Test driver");
+		    //Create sellers 
+			Seller seller1=new Seller("driver1@gmail.com","Aitor Fernandez","Ataun");
+			Seller seller2=new Seller("driver2@gmail.com","Ane Gaztañaga","Orio");
+			Seller seller3=new Seller("driver3@gmail.com","Test driver","Gernika");
 
 			
-			//Create rides
-			driver1.addRide("Donostia", "Bilbo", UtilDate.newDate(year,month,15), 4, 7);
-			driver1.addRide("Donostia", "Gazteiz", UtilDate.newDate(year,month,6), 4, 8);
-			driver1.addRide("Bilbo", "Donostia", UtilDate.newDate(year,month,25), 4, 4);
-
-			driver1.addRide("Donostia", "Iruña", UtilDate.newDate(year,month,7), 4, 8);
+			//Create products
+			Date today = UtilDate.trim(new Date());
+		
 			
-			driver2.addRide("Donostia", "Bilbo", UtilDate.newDate(year,month,15), 3, 3);
-			driver2.addRide("Bilbo", "Donostia", UtilDate.newDate(year,month,25), 2, 5);
-			driver2.addRide("Eibar", "Gasteiz", UtilDate.newDate(year,month,6), 2, 5);
+			seller1.addProduct("futbol baloia", "oso polita, gutxi erabilita", 2, "kirola", 10, today);
+			seller1.addProduct("salomon mendiko botak", "44 zenbakia, 3 ateraldi", 2, "kirola",20, today);
+			seller1.addProduct("samsung 42\" telebista", "berria, erabili gabe", 1, "elektronika",175, today);
 
-			driver3.addRide("Bilbo", "Donostia", UtilDate.newDate(year,month,14), 1, 3);
+
+			seller2.addProduct("imac 27", "7 urte, dena ondo dabil", 1, "elektronika",200, today);
+			seller2.addProduct("iphone 17", "oso gutxi erabilita", 2, "elektronika",400, today);
+			seller2.addProduct("orbea mendiko bizikleta", "29\" 10 urte, mantenua behar du", 4, "kirola",225, today);
+			seller2.addProduct("polar kilor erlojua", "Vantage M, ondo dago", 3, "kirola",30, today);
+
+			
+
+			seller3.addProduct("sukaldeko mahaia", "1.8*0.8, 4 aulkiekin. Prezio finkoa", 4, "etxea",45, today);
 
 			
 						
-			db.persist(driver1);
-			db.persist(driver2);
-			db.persist(driver3);
+			db.persist(seller1);
+			db.persist(seller2);
+			db.persist(seller3);
 
 	
 			db.getTransaction().commit();
@@ -149,25 +154,25 @@ public class DataAccess  {
 	 * @throws RideMustBeLaterThanTodayException if the ride date is before today 
  	 * @throws RideAlreadyExistException if the same ride already exists for the driver
 	 */
-	public Product createRide(String from, String to, Date date, int nPlaces, float price, String driverEmail) throws  RideAlreadyExistException, RideMustBeLaterThanTodayException {
-		System.out.println(">> DataAccess: createRide=> from= "+from+" to= "+to+" driver="+driverEmail+" date "+date);
+	public Product createProduct(String title, String description, int status, float price, String category, Date date, String sellerEmail) throws  RideAlreadyExistException, RideMustBeLaterThanTodayException {
+		System.out.println(">> DataAccess: createProduct=> title= "+title+" driver="+sellerEmail+" date "+date);
 		try {
 			if(new Date().compareTo(date)>0) {
 				throw new RideMustBeLaterThanTodayException(ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.ErrorRideMustBeLaterThanToday"));
 			}
 			db.getTransaction().begin();
 			
-			Seller driver = db.find(Seller.class, driverEmail);
-			if (driver.doesRideExists(from, to, date)) {
+			Seller seller = db.find(Seller.class, sellerEmail);
+			if (seller.doesProductExist(title)) {
 				db.getTransaction().commit();
-				throw new RideAlreadyExistException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.RideAlreadyExist"));
+				throw new RideAlreadyExistException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.ProductAlreadyExist"));
 			}
-			Product ride = driver.addRide(from, to, date, nPlaces, price);
+			Product product = seller.addProduct(title, description, status, price, category, date);
 			//next instruction can be obviated
-			db.persist(driver); 
+			db.persist(seller); 
 			db.getTransaction().commit();
 
-			return ride;
+			return product;
 		} catch (NullPointerException e) {
 			// TODO Auto-generated catch block
 			db.getTransaction().commit();

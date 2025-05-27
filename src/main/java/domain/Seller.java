@@ -80,9 +80,9 @@ public class Seller implements Serializable {
 	 * @param publicationDate
 	 * @return Product
 	 */
-	public Product addProduct(String title, String description, String status, float price, String category, Date publicationDate)  {
-		
-        Product product=new Product(title,description, status, category, price,  publicationDate, this);
+	public Product addProduct(String title, String description, int status, String category, float price,  Date publicationDate)  {
+
+        Product product=new Product(title,description, status, category, price, publicationDate, this);
         products.add(product);
         return product;
 	}
@@ -95,7 +95,7 @@ public class Seller implements Serializable {
 	 * @param date the date of the ride 
 	 * @return true if the ride exists and false in other case
 	 */
-	public boolean existProduct(String title)  {	
+	public boolean doesProductExist(String title)  {	
 		for (Product r:products)
 			if ( r.getTitle().compareTo(title)==0 )
 			 return true;
