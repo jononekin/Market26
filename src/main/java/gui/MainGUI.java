@@ -24,7 +24,7 @@ import java.awt.event.ActionEvent;
 
 public class MainGUI extends JFrame {
 	
-    private Seller driver;
+    private Seller seller;
 	private static final long serialVersionUID = 1L;
 
 	private JPanel jContentPane = null;
@@ -50,10 +50,10 @@ public class MainGUI extends JFrame {
 	/**
 	 * This is the default constructor
 	 */
-	public MainGUI(Seller d) {
+	public MainGUI(Seller s) {
 		super();
 
-		driver=d;
+		this.seller=s;
 		
 		// this.setSize(271, 295);
 		this.setSize(495, 290);
@@ -96,16 +96,16 @@ public class MainGUI extends JFrame {
 		panel.add(rdbtnNewRadioButton);
 		
 		jButtonCreateQuery = new JButton();
-		jButtonCreateQuery.setText(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.CreateRide"));
+		jButtonCreateQuery.setText(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.CreateProduct"));
 		jButtonCreateQuery.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				JFrame a = new CreateProductGUI(driver);
+				JFrame a = new CreateProductGUI(seller);
 				a.setVisible(true);
 			}
 		});
 		
 		jButtonQueryQueries = new JButton();
-		jButtonQueryQueries.setText(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.QueryRides"));
+		jButtonQueryQueries.setText(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.QueryProducts"));
 		jButtonQueryQueries.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				JFrame a = new FindRidesGUI();
@@ -123,7 +123,7 @@ public class MainGUI extends JFrame {
 		
 		
 		setContentPane(jContentPane);
-		setTitle(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.MainTitle") + " - driver :"+driver.getName());
+		setTitle(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.MainTitle") + " - driver :"+seller.getName());
 		
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -135,9 +135,9 @@ public class MainGUI extends JFrame {
 	
 	private void paintAgain() {
 		jLabelSelectOption.setText(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.SelectOption"));
-		jButtonQueryQueries.setText(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.QueryRides"));
-		jButtonCreateQuery.setText(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.CreateRide"));
-		this.setTitle(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.MainTitle")+ " - driver :"+driver.getName());
+		jButtonQueryQueries.setText(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.QueryProducts"));
+		jButtonCreateQuery.setText(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.CreateProduct"));
+		this.setTitle(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.MainTitle")+ " - seller :"+seller.getName());
 	}
 	
 } // @jve:decl-index=0:visual-constraint="0,0"

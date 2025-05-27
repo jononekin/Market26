@@ -24,11 +24,11 @@ public class CreateProductGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	
-	private Seller driver;
-	private JTextField fieldOrigin=new JTextField();
-	private JTextField fieldDestination=new JTextField();
+	private Seller seller;
+	private JTextField fieldTitle=new JTextField();
+	private JTextField fieldDescription=new JTextField();
 	
-	private JLabel jLabelOrigin = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.LeavingFrom"));
+	private JLabel jLabelTitle = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.LeavingFrom"));
 	private JLabel jLabelDestination = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.GoingTo")); 
 	private JLabel jLabelSeats = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.NumberOfSeats"));
 	private JLabel jLabRideDate = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.RideDate"));
@@ -39,9 +39,7 @@ public class CreateProductGUI extends JFrame {
 	private JTextField jTextFieldSeats = new JTextField();
 	private JTextField jTextFieldPrice = new JTextField();
 
-	private JCalendar jCalendar = new JCalendar();
-	private Calendar calendarAct = null;
-	private Calendar calendarAnt = null;
+
 
 	private JScrollPane scrollPaneEvents = new JScrollPane();
 
@@ -53,21 +51,21 @@ public class CreateProductGUI extends JFrame {
 	private List<Date> datesWithEventsCurrentMonth;
 
 
-	public CreateProductGUI(Seller driver) {
+	public CreateProductGUI(Seller seller) {
 
-		this.driver=driver;
+		this.seller=seller;
 		this.getContentPane().setLayout(null);
 		this.setSize(new Dimension(604, 370));
 		this.setTitle(ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.CreateRide"));
 
-		jLabelOrigin.setBounds(new Rectangle(6, 56, 92, 20));
+		jLabelTitle.setBounds(new Rectangle(6, 56, 92, 20));
 		jLabelSeats.setBounds(new Rectangle(6, 119, 173, 20));
 		jTextFieldSeats.setBounds(new Rectangle(139, 119, 60, 20));
 		
 		jLabelPrice.setBounds(new Rectangle(6, 159, 173, 20));
 		jTextFieldPrice.setBounds(new Rectangle(139, 159, 60, 20));
 
-		jCalendar.setBounds(new Rectangle(300, 50, 225, 150));
+		
 		scrollPaneEvents.setBounds(new Rectangle(25, 44, 346, 116));
 
 		jButtonCreate.setBounds(new Rectangle(100, 263, 130, 30));
@@ -98,12 +96,8 @@ public class CreateProductGUI extends JFrame {
 		this.getContentPane().add(jTextFieldSeats, null);
 
 		this.getContentPane().add(jLabelSeats, null);
-		this.getContentPane().add(jLabelOrigin, null);
+		this.getContentPane().add(jLabelTitle, null);
 		
-
-		
-
-		this.getContentPane().add(jCalendar, null);
 		
 		this.getContentPane().add(jLabelPrice, null);
 		this.getContentPane().add(jTextFieldPrice, null);
@@ -112,7 +106,6 @@ public class CreateProductGUI extends JFrame {
 		
 		
 		BLFacade facade = MainGUI.getBusinessLogic();
-		datesWithEventsCurrentMonth=facade.getThisMonthDatesWithRides("a","b",jCalendar.getDate());		
 		
 		jLabRideDate.setBounds(new Rectangle(40, 15, 140, 25));
 		jLabRideDate.setBounds(298, 16, 140, 25);
@@ -122,47 +115,14 @@ public class CreateProductGUI extends JFrame {
 		getContentPane().add(jLabelDestination);
 		
 		
-		fieldOrigin.setBounds(100, 53, 130, 26);
-		getContentPane().add(fieldOrigin);
-		fieldOrigin.setColumns(10);
+		fieldTitle.setBounds(100, 53, 130, 26);
+		getContentPane().add(fieldTitle);
+		fieldTitle.setColumns(10);
 		
 		
-		fieldDestination.setBounds(104, 81, 123, 26);
-		getContentPane().add(fieldDestination);
-		fieldDestination.setColumns(10);
-		 //Code for JCalendar
-		this.jCalendar.addPropertyChangeListener(new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent propertychangeevent) {
-//			
-				if (propertychangeevent.getPropertyName().equals("locale")) {
-					jCalendar.setLocale((Locale) propertychangeevent.getNewValue());
-				} else if (propertychangeevent.getPropertyName().equals("calendar")) {
-					calendarAnt = (Calendar) propertychangeevent.getOldValue();
-					calendarAct = (Calendar) propertychangeevent.getNewValue();
-					DateFormat dateformat1 = DateFormat.getDateInstance(1, jCalendar.getLocale());
-					
-					int monthAnt = calendarAnt.get(Calendar.MONTH);
-					int monthAct = calendarAct.get(Calendar.MONTH);
-					if (monthAct!=monthAnt) {
-						if (monthAct==monthAnt+2) { 
-							// Si en JCalendar está 30 de enero y se avanza al mes siguiente, devolverá 2 de marzo (se toma como equivalente a 30 de febrero)
-							// Con este código se dejará como 1 de febrero en el JCalendar
-							calendarAct.set(Calendar.MONTH, monthAnt+1);
-							calendarAct.set(Calendar.DAY_OF_MONTH, 1);
-						}
-						
-						jCalendar.setCalendar(calendarAct);						
-	
-					}
-					jCalendar.setCalendar(calendarAct);
-					int offset = jCalendar.getCalendar().get(Calendar.DAY_OF_WEEK);
-					
-						if (Locale.getDefault().equals(new Locale("es")))
-							offset += 4;
-						else
-							offset += 5;
-				Component o = (Component) jCalendar.getDayChooser().getDayPanel().getComponent(jCalendar.getCalendar().get(Calendar.DAY_OF_MONTH) + offset);
-				}}});
+		fieldDescription.setBounds(104, 81, 123, 26);
+		getContentPane().add(fieldDescription);
+		fieldDescription.setColumns(10);
 		
 	}	 
 	private void jButtonCreate_actionPerformed(ActionEvent e) {
@@ -176,7 +136,7 @@ public class CreateProductGUI extends JFrame {
 				int inputSeats = Integer.parseInt(jTextFieldSeats.getText());
 				float price = Float.parseFloat(jTextFieldPrice.getText());
 
-				Product r=facade.createRide(fieldOrigin.getText(), fieldDestination.getText(), UtilDate.trim(jCalendar.getDate()), inputSeats, price, driver.getEmail());
+				Product r=facade.createRide(fieldTitle.getText(), fieldDescription.getText(), UtilDate.trim(jCalendar.getDate()), inputSeats, price, seller.getEmail());
 				jLabelMsg.setText(ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.RideCreated"));
 
 			} catch (RideMustBeLaterThanTodayException e1) {
@@ -196,7 +156,7 @@ public class CreateProductGUI extends JFrame {
 	private String field_Errors() {
 		
 		try {
-			if ((fieldOrigin.getText().length()==0) || (fieldDestination.getText().length()==0) || (jTextFieldSeats.getText().length()==0) || (jTextFieldPrice.getText().length()==0))
+			if ((fieldTitle.getText().length()==0) || (fieldDescription.getText().length()==0) || (jTextFieldSeats.getText().length()==0) || (jTextFieldPrice.getText().length()==0))
 				return ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.ErrorQuery");
 			else {
 

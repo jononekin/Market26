@@ -1,16 +1,15 @@
 package domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Vector;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
@@ -24,17 +23,19 @@ public class Seller implements Serializable {
 	@Id 
 	private String email;
 	private String name; 
+	private String city;
 	@XmlIDREF
 	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
-	private List<Product> rides=new Vector<Product>();
+	private List<Product> products=new ArrayList<Product>();
 
 	public Seller() {
 		super();
 	}
 
-	public Seller(String email, String name) {
+	public Seller(String email, String name, String city) {
 		this.email = email;
 		this.name = name;
+		this.city=city;
 	}
 	
 	
@@ -53,24 +54,37 @@ public class Seller implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
 
 	
 	
 	public String toString(){
-		return email+";"+name+rides;
+		return email+";"+name+products;
 	}
 	
 	/**
-	 * This method creates a bet with a question, minimum bet ammount and percentual profit
+	 * This method creates/adds a product to a seller
 	 * 
-	 * @param question to be added to the event
-	 * @param betMinimum of that question
-	 * @return Bet
+	 * @param title of the product
+	 * @param description of the product
+	 * @param status 
+	 * @param selling price
+	 * @param category of a product
+	 * @param publicationDate
+	 * @return Product
 	 */
-	public Product addProduct(String title, String description, String state, float price, String category, Date d)  {
-        Product ride=new Product(title,description, state, price,  d, this);
-        rides.add(ride);
-        return ride;
+	public Product addProduct(String title, String description, String status, float price, String category, Date publicationDate)  {
+		
+        Product product=new Product(title,description, status, category, price,  publicationDate, this);
+        products.add(product);
+        return product;
 	}
 
 	/**
@@ -81,11 +95,10 @@ public class Seller implements Serializable {
 	 * @param date the date of the ride 
 	 * @return true if the ride exists and false in other case
 	 */
-	public boolean doesRideExists(String from, String to, Date date)  {	
-		for (Product r:rides)
-			if ( (java.util.Objects.equals(r.getFrom(),from)) && (java.util.Objects.equals(r.getTo(),to)) && (java.util.Objects.equals(r.getDate(),date)) )
+	public boolean existProduct(String title)  {	
+		for (Product r:products)
+			if ( r.getTitle().compareTo(title)==0 )
 			 return true;
-		
 		return false;
 	}
 		
@@ -103,20 +116,5 @@ public class Seller implements Serializable {
 		return true;
 	}
 
-	public Product removeRide(String from, String to, Date date) {
-		boolean found=false;
-		int index=0;
-		Product r=null;
-		while (!found && index<=rides.size()) {
-			r=rides.get(++index);
-			if ( (java.util.Objects.equals(r.getFrom(),from)) && (java.util.Objects.equals(r.getTo(),to)) && (java.util.Objects.equals(r.getDate(),date)) )
-			found=true;
-		}
-			
-		if (found) {
-			rides.remove(index);
-			return r;
-		} else return null;
-	}
 	
 }
