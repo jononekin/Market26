@@ -32,7 +32,7 @@ public class Product implements Serializable {
 		super();
 	}
 	
-	public Product(Integer productNumber, String title, String description, int status, String category, float price, Date pubDate, Seller seller) {
+	public Product(Integer productNumber, String title, String description, float price, int status, String category, Date pubDate, Seller seller) {
 		super();
 		this.productNumber = productNumber;
 		this.title = title;
@@ -46,7 +46,7 @@ public class Product implements Serializable {
 
 	
 
-	public Product(String title, String description, int status, String category, float price, Date pubDate, Seller seller) {
+	public Product(String title, String description,  float price,int status, String category, Date pubDate, Seller seller) {
 		super();
 
 		this.title = title;

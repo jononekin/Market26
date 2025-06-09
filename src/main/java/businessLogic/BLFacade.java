@@ -5,9 +5,7 @@ import java.util.List;
 
 //import domain.Booking;
 import domain.Product;
-import domain.Seller;
-import exceptions.RideMustBeLaterThanTodayException;
-import exceptions.RideAlreadyExistException;
+import exceptions.ProductAlreadyExistException;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -45,7 +43,7 @@ public interface BLFacade  {
 	 * @return Product
 	 */
    @WebMethod
-	public Product createProduct(String title, String description, int status, float price, String category, Date date, String sellerEmail) throws  RideAlreadyExistException, RideMustBeLaterThanTodayException;
+	public Product createProduct(String title, String description, float price, int status, String sellerEmail) throws  ProductAlreadyExistException;
 	
 	
 	/**

@@ -80,13 +80,19 @@ public class Seller implements Serializable {
 	 * @param publicationDate
 	 * @return Product
 	 */
-	public Product addProduct(String title, String description, int status, String category, float price,  Date publicationDate)  {
+	public Product addProduct(String title, String description,  float price, int status, Date publicationDate)  {
 
-        Product product=new Product(title,description, status, category, price, publicationDate, this);
+        Product product=new Product(title,description, price, status, "general", publicationDate, this);
         products.add(product);
         return product;
 	}
 
+	public Product addProduct(String title, String description,  float price, int status, String category, Date publicationDate)  {
+
+        Product product=new Product(title,description, price, status, category, publicationDate, this);
+        products.add(product);
+        return product;
+	}
 	/**
 	 * This method checks if the ride already exists for that driver
 	 * 

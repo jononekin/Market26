@@ -11,7 +11,7 @@ import dataAccess.DataAccess;
 import domain.Product;
 import domain.Seller;
 import exceptions.RideMustBeLaterThanTodayException;
-import exceptions.RideAlreadyExistException;
+import exceptions.ProductAlreadyExistException;
 
 /**
  * It implements the business logic as a web service.
@@ -70,9 +70,9 @@ public class BLFacadeImplementation  implements BLFacade {
 	 * {@inheritDoc}
 	 */
    @WebMethod
-	public Product createProduct(String title, String description, int status, float price, String category, Date date, String sellerEmail) throws  RideAlreadyExistException, RideMustBeLaterThanTodayException{	   
+	public Product createProduct(String title, String description, float price, int status, String sellerEmail) throws  ProductAlreadyExistException {
 		dbManager.open();
-		Product product=dbManager.createProduct(title, description, status, price, category, date, sellerEmail);		
+		Product product=dbManager.createProduct(title, description, price, status, sellerEmail);		
 		dbManager.close();
 		return product;
    };

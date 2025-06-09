@@ -20,7 +20,7 @@ import configuration.ConfigXML;
 import configuration.UtilDate;
 import domain.Seller;
 import domain.Product;
-import exceptions.RideAlreadyExistException;
+import exceptions.ProductAlreadyExistException;
 import exceptions.RideMustBeLaterThanTodayException;
 
 /**
@@ -89,19 +89,19 @@ public class DataAccess  {
 			Date today = UtilDate.trim(new Date());
 		
 			
-			seller1.addProduct("futbol baloia", "oso polita, gutxi erabilita", 2, "kirola", 10, today);
-			seller1.addProduct("salomon mendiko botak", "44 zenbakia, 3 ateraldi", 2, "kirola",20, today);
-			seller1.addProduct("samsung 42\" telebista", "berria, erabili gabe", 1, "elektronika",175, today);
+			seller1.addProduct("futbol baloia", "oso polita, gutxi erabilita", 10, 2, "kirola", today);
+			seller1.addProduct("salomon mendiko botak", "44 zenbakia, 3 ateraldi",20,  2, "kirola", today);
+			seller1.addProduct("samsung 42\" telebista", "berria, erabili gabe", 175, 1, "elektronika", today);
 
 
-			seller2.addProduct("imac 27", "7 urte, dena ondo dabil", 1, "elektronika",200, today);
-			seller2.addProduct("iphone 17", "oso gutxi erabilita", 2, "elektronika",400, today);
-			seller2.addProduct("orbea mendiko bizikleta", "29\" 10 urte, mantenua behar du", 4, "kirola",225, today);
-			seller2.addProduct("polar kilor erlojua", "Vantage M, ondo dago", 3, "kirola",30, today);
+			seller2.addProduct("imac 27", "7 urte, dena ondo dabil", 1, 200,  "elektronika", today);
+			seller2.addProduct("iphone 17", "oso gutxi erabilita", 2, 400, "elektronika", today);
+			seller2.addProduct("orbea mendiko bizikleta", "29\" 10 urte, mantenua behar du", 4,225, "kirola", today);
+			seller2.addProduct("polar kilor erlojua", "Vantage M, ondo dago", 3, 30, "kirola", today);
 
 			
 
-			seller3.addProduct("sukaldeko mahaia", "1.8*0.8, 4 aulkiekin. Prezio finkoa", 4, "etxea",45, today);
+			seller3.addProduct("sukaldeko mahaia", "1.8*0.8, 4 aulkiekin. Prezio finkoa", 4,45, "etxea", today);
 
 			
 						
@@ -152,22 +152,22 @@ public class DataAccess  {
 	 * 
 	 * @return the created ride, or null, or an exception
 	 * @throws RideMustBeLaterThanTodayException if the ride date is before today 
- 	 * @throws RideAlreadyExistException if the same ride already exists for the driver
+ 	 * @throws ProductAlreadyExistException if the same ride already exists for the driver
 	 */
-	public Product createProduct(String title, String description, int status, float price, String category, Date date, String sellerEmail) throws  RideAlreadyExistException, RideMustBeLaterThanTodayException {
-		System.out.println(">> DataAccess: createProduct=> title= "+title+" driver="+sellerEmail+" date "+date);
+	public Product createProduct(String title, String description,  float price, int status,  String sellerEmail) throws  ProductAlreadyExistException, RideMustBeLaterThanTodayException {
+		System.out.println(">> DataAccess: createProduct=> title= "+title+" driver="+sellerEmail);
 		try {
-			if(new Date().compareTo(date)>0) {
-				throw new RideMustBeLaterThanTodayException(ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.ErrorRideMustBeLaterThanToday"));
-			}
+			
 			db.getTransaction().begin();
 			
 			Seller seller = db.find(Seller.class, sellerEmail);
 			if (seller.doesProductExist(title)) {
 				db.getTransaction().commit();
-				throw new RideAlreadyExistException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.ProductAlreadyExist"));
+				throw new ProductAlreadyExistException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.ProductAlreadyExist"));
 			}
-			Product product = seller.addProduct(title, description, status, price, category, date);
+			Date today = UtilDate.trim(new Date());
+
+			Product product = seller.addProduct(title, description, price, status, today);
 			//next instruction can be obviated
 			db.persist(seller); 
 			db.getTransaction().commit();

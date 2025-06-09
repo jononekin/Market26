@@ -17,7 +17,7 @@ import businessLogic.BLFacade;
 import configuration.UtilDate;
 import domain.Seller;
 import domain.Product;
-import exceptions.RideAlreadyExistException;
+import exceptions.ProductAlreadyExistException;
 import exceptions.RideMustBeLaterThanTodayException;
 
 public class CreateProductGUI extends JFrame {
@@ -28,22 +28,22 @@ public class CreateProductGUI extends JFrame {
 	private JTextField fieldTitle=new JTextField();
 	private JTextField fieldDescription=new JTextField();
 	
-	private JLabel jLabelTitle = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.LeavingFrom"));
-	private JLabel jLabelDestination = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.GoingTo")); 
-	private JLabel jLabelSeats = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.NumberOfSeats"));
-	private JLabel jLabRideDate = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.RideDate"));
-	private JLabel jLabelPrice = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.Price"));
-
-	
-	
-	private JTextField jTextFieldSeats = new JTextField();
+	private JLabel jLabelTitle = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Title"));
+	private JLabel jLabelDescription = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Description")); 
+	private JLabel jLabelProductStatus = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Status"));
+	private JLabel jLabelPrice = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Price"));
 	private JTextField jTextFieldPrice = new JTextField();
 
 
 
 	private JScrollPane scrollPaneEvents = new JScrollPane();
+	
+	JComboBox<String> jComboBoxStatus = new JComboBox<String>();
+	DefaultComboBoxModel<String> statusOptions = new DefaultComboBoxModel<String>();
+	List<String> status;
 
-	private JButton jButtonCreate = new JButton(ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.CreateRide"));
+
+	private JButton jButtonCreate = new JButton(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.CreateProduct"));
 	private JButton jButtonClose = new JButton(ResourceBundle.getBundle("Etiquetas").getString("Close"));
 	private JLabel jLabelMsg = new JLabel();
 	private JLabel jLabelError = new JLabel();
@@ -56,14 +56,12 @@ public class CreateProductGUI extends JFrame {
 		this.seller=seller;
 		this.getContentPane().setLayout(null);
 		this.setSize(new Dimension(604, 370));
-		this.setTitle(ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.CreateRide"));
+		this.setTitle(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.CreateProduct"));
 
 		jLabelTitle.setBounds(new Rectangle(6, 56, 92, 20));
-		jLabelSeats.setBounds(new Rectangle(6, 119, 173, 20));
-		jTextFieldSeats.setBounds(new Rectangle(139, 119, 60, 20));
 		
-		jLabelPrice.setBounds(new Rectangle(6, 159, 173, 20));
-		jTextFieldPrice.setBounds(new Rectangle(139, 159, 60, 20));
+		jLabelPrice.setBounds(new Rectangle(6, 166, 101, 20));
+		jTextFieldPrice.setBounds(new Rectangle(137, 166, 60, 20));
 
 		
 		scrollPaneEvents.setBounds(new Rectangle(25, 44, 346, 116));
@@ -85,17 +83,19 @@ public class CreateProductGUI extends JFrame {
 		jLabelMsg.setBounds(new Rectangle(275, 214, 305, 20));
 		jLabelMsg.setForeground(Color.red);
 
-		jLabelError.setBounds(new Rectangle(6, 191, 320, 20));
+		jLabelError.setBounds(new Rectangle(6, 231, 320, 20));
 		jLabelError.setForeground(Color.red);
+		
+	    status=new ArrayList<String>(Arrays.asList("a","b","c","d"));
+		for(String s:status) statusOptions.addElement(s);
+		
+		
 
 		this.getContentPane().add(jLabelMsg, null);
 		this.getContentPane().add(jLabelError, null);
 
 		this.getContentPane().add(jButtonClose, null);
 		this.getContentPane().add(jButtonCreate, null);
-		this.getContentPane().add(jTextFieldSeats, null);
-
-		this.getContentPane().add(jLabelSeats, null);
 		this.getContentPane().add(jLabelTitle, null);
 		
 		
@@ -107,22 +107,26 @@ public class CreateProductGUI extends JFrame {
 		
 		BLFacade facade = MainGUI.getBusinessLogic();
 		
-		jLabRideDate.setBounds(new Rectangle(40, 15, 140, 25));
-		jLabRideDate.setBounds(298, 16, 140, 25);
-		getContentPane().add(jLabRideDate);
+		jLabelProductStatus.setBounds(new Rectangle(40, 15, 140, 25));
+		jLabelProductStatus.setBounds(6, 187, 140, 25);
+		getContentPane().add(jLabelProductStatus);
 		
-		jLabelDestination.setBounds(6, 81, 61, 16);
-		getContentPane().add(jLabelDestination);
+		jLabelDescription.setBounds(6, 81, 109, 16);
+		getContentPane().add(jLabelDescription);
 		
 		
-		fieldTitle.setBounds(100, 53, 130, 26);
+		fieldTitle.setBounds(128, 53, 370, 26);
 		getContentPane().add(fieldTitle);
 		fieldTitle.setColumns(10);
 		
 		
-		fieldDescription.setBounds(104, 81, 123, 26);
+		fieldDescription.setBounds(127, 81, 371, 73);
 		getContentPane().add(fieldDescription);
 		fieldDescription.setColumns(10);
+		
+		jComboBoxStatus.setModel(statusOptions);
+		jComboBoxStatus.setBounds(132, 192, 114, 27);
+		getContentPane().add(jComboBoxStatus);
 		
 	}	 
 	private void jButtonCreate_actionPerformed(ActionEvent e) {
@@ -133,16 +137,17 @@ public class CreateProductGUI extends JFrame {
 		else
 			try {
 				BLFacade facade = MainGUI.getBusinessLogic();
-				int inputSeats = Integer.parseInt(jTextFieldSeats.getText());
 				float price = Float.parseFloat(jTextFieldPrice.getText());
+				String status=(String)jComboBoxStatus.getSelectedItem();
+				int numStatus=status.indexOf(status);
 
-				Product r=facade.createRide(fieldTitle.getText(), fieldDescription.getText(), UtilDate.trim(jCalendar.getDate()), inputSeats, price, seller.getEmail());
-				jLabelMsg.setText(ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.RideCreated"));
+				Product p=facade.createProduct(fieldTitle.getText(), fieldDescription.getText(), price, numStatus, seller.getEmail());
+				jLabelMsg.setText(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.ProductCreated"));
 
-			} catch (RideMustBeLaterThanTodayException e1) {
-				// TODO Auto-generated catch block
-				jLabelMsg.setText(e1.getMessage());
-			} catch (RideAlreadyExistException e1) {
+			
+			//} catch (ProductAlreadyExistException e1) {
+			} catch (Exception e1) {
+
 				// TODO Auto-generated catch block
 				jLabelMsg.setText(e1.getMessage());
 			}
@@ -156,29 +161,21 @@ public class CreateProductGUI extends JFrame {
 	private String field_Errors() {
 		
 		try {
-			if ((fieldTitle.getText().length()==0) || (fieldDescription.getText().length()==0) || (jTextFieldSeats.getText().length()==0) || (jTextFieldPrice.getText().length()==0))
-				return ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.ErrorQuery");
+			if ((fieldTitle.getText().length()==0) || (fieldDescription.getText().length()==0)  || (jTextFieldPrice.getText().length()==0))
+				return ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.ErrorQuery");
 			else {
 
 				// trigger an exception if the introduced string is not a number
-				int inputSeats = Integer.parseInt(jTextFieldSeats.getText());
-
-				if (inputSeats <= 0) {
-					return ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.SeatsMustBeGreaterThan0");
-				}
-				else {
 					float price = Float.parseFloat(jTextFieldPrice.getText());
 					if (price <= 0) 
-						return ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.PriceMustBeGreaterThan0");
+						return ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.PriceMustBeGreaterThan0");
 					
 					else 
 						return null;
-						
-				}
 			}
 		} catch (java.lang.NumberFormatException e1) {
 
-			return  ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.ErrorNumber");		
+			return  ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.ErrorNumber");		
 		} catch (Exception e1) {
 
 			e1.printStackTrace();
