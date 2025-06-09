@@ -28,10 +28,10 @@ public class ApplicationLauncher {
 		
 		System.out.println("Locale: "+Locale.getDefault());
 		
-	    Seller driver=new Seller("seller1@gmail.com","Test Seller", "Ataun");
+	    Seller seller=new Seller("seller3@gmail.com","Test Seller", "Ataun");
 
 		
-		MainGUI a=new MainGUI(driver);
+		MainGUI a=new MainGUI("seller3@gmail.com");
 		a.setVisible(true);
 
 

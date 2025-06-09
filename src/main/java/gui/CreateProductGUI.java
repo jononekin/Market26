@@ -24,7 +24,7 @@ public class CreateProductGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	
-	private Seller seller;
+	private String sellerMail;
 	private JTextField fieldTitle=new JTextField();
 	private JTextField fieldDescription=new JTextField();
 	
@@ -51,9 +51,9 @@ public class CreateProductGUI extends JFrame {
 	private List<Date> datesWithEventsCurrentMonth;
 
 
-	public CreateProductGUI(Seller seller) {
+	public CreateProductGUI(String mail) {
 
-		this.seller=seller;
+		this.sellerMail=mail;
 		this.getContentPane().setLayout(null);
 		this.setSize(new Dimension(604, 370));
 		this.setTitle(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.CreateProduct"));
@@ -138,10 +138,13 @@ public class CreateProductGUI extends JFrame {
 			try {
 				BLFacade facade = MainGUI.getBusinessLogic();
 				float price = Float.parseFloat(jTextFieldPrice.getText());
-				String status=(String)jComboBoxStatus.getSelectedItem();
-				int numStatus=status.indexOf(status);
+				String s=(String)jComboBoxStatus.getSelectedItem();
+				System.out.println("status "+s);
+				int numStatus=status.indexOf(s);
+				System.out.println("status "+numStatus);
 
-				Product p=facade.createProduct(fieldTitle.getText(), fieldDescription.getText(), price, numStatus, seller.getEmail());
+				Product p=facade.createProduct(fieldTitle.getText(), fieldDescription.getText(), price, numStatus, sellerMail);
+				System.out.println("Product created "+p);
 				jLabelMsg.setText(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.ProductCreated"));
 
 			

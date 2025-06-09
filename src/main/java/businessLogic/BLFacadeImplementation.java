@@ -27,7 +27,6 @@ public class BLFacadeImplementation  implements BLFacade {
 		    dbManager=new DataAccess();
 		    
 		//dbManager.close();
-
 		
 	}
 	
@@ -39,32 +38,6 @@ public class BLFacadeImplementation  implements BLFacade {
 		dbManager=da;		
 	}
     
-    
-    /**
-     * {@inheritDoc}
-     */
-    @WebMethod public List<String> getDepartCities(){
-    	dbManager.open();	
-		
-		 List<String> departLocations=dbManager.getDepartCities();		
-
-		dbManager.close();
-		
-		return departLocations;
-    	
-    }
-    /**
-     * {@inheritDoc}
-     */
-	@WebMethod public List<String> getDestinationCities(String from){
-		dbManager.open();	
-		
-		 List<String> targetCities=dbManager.getArrivalCities(from);		
-
-		dbManager.close();
-		
-		return targetCities;
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -81,26 +54,14 @@ public class BLFacadeImplementation  implements BLFacade {
     * {@inheritDoc}
     */
 	@WebMethod 
-	public List<Product> getRides(String from, String to, Date date){
+	public List<Product> getProducts(String desc){
 		dbManager.open();
-		List<Product>  rides=dbManager.getRides(from, to, date);
+		List<Product>  rides=dbManager.getProducts(desc);
 		dbManager.close();
 		return rides;
 	}
 
     
-	/**
-	 * {@inheritDoc}
-	 */
-	@WebMethod 
-	public List<Date> getThisMonthDatesWithRides(String from, String to, Date date){
-		dbManager.open();
-		List<Date>  dates=dbManager.getThisMonthDatesWithRides(from, to, date);
-		dbManager.close();
-		return dates;
-	}
-	
-	
 	public void close() {
 		DataAccess dB4oManager=new DataAccess();
 

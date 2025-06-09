@@ -24,7 +24,7 @@ import java.awt.event.ActionEvent;
 
 public class MainGUI extends JFrame {
 	
-    private Seller seller;
+    private String sellerMail;
 	private static final long serialVersionUID = 1L;
 
 	private JPanel jContentPane = null;
@@ -50,10 +50,10 @@ public class MainGUI extends JFrame {
 	/**
 	 * This is the default constructor
 	 */
-	public MainGUI(Seller s) {
+	public MainGUI( String mail) {
 		super();
 
-		this.seller=s;
+		this.sellerMail=mail;
 		
 		// this.setSize(271, 295);
 		this.setSize(495, 290);
@@ -99,7 +99,7 @@ public class MainGUI extends JFrame {
 		jButtonCreateQuery.setText(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.CreateProduct"));
 		jButtonCreateQuery.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				JFrame a = new CreateProductGUI(seller);
+				JFrame a = new CreateProductGUI(sellerMail);
 				a.setVisible(true);
 			}
 		});
@@ -108,7 +108,7 @@ public class MainGUI extends JFrame {
 		jButtonQueryQueries.setText(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.QueryProducts"));
 		jButtonQueryQueries.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				JFrame a = new FindRidesGUI();
+				JFrame a = new FindProductGUI();
 
 				a.setVisible(true);
 			}
@@ -123,7 +123,7 @@ public class MainGUI extends JFrame {
 		
 		
 		setContentPane(jContentPane);
-		setTitle(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.MainTitle") + " - driver :"+seller.getName());
+		setTitle(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.MainTitle") + " - driver :"+sellerMail);
 		
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -137,7 +137,7 @@ public class MainGUI extends JFrame {
 		jLabelSelectOption.setText(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.SelectOption"));
 		jButtonQueryQueries.setText(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.QueryProducts"));
 		jButtonCreateQuery.setText(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.CreateProduct"));
-		this.setTitle(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.MainTitle")+ " - seller :"+seller.getName());
+		this.setTitle(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.MainTitle")+ " - seller :"+sellerMail);
 	}
 	
 } // @jve:decl-index=0:visual-constraint="0,0"

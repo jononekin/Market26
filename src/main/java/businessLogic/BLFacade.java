@@ -16,20 +16,6 @@ import javax.jws.WebService;
 @WebService
 public interface BLFacade  {
 	  
-	/**
-	 * This method returns all the cities where rides depart 
-	 * @return collection of cities
-	 */
-	@WebMethod public List<String> getDepartCities();
-	
-	/**
-	 * This method returns all the arrival destinations, from all rides that depart from a given city  
-	 * 
-	 * @param from the depart location of a ride
-	 * @return all the arrival destinations
-	 */
-	@WebMethod public List<String> getDestinationCities(String from);
-
 
 	/**
 	 * This method creates/adds a product to a seller
@@ -47,23 +33,12 @@ public interface BLFacade  {
 	
 	
 	/**
-	 * This method retrieves the rides from two locations on a given date 
+	 * This method retrieves the products that contain desc
 	 * 
-	 * @param from the origin location of a ride
-	 * @param to the destination location of a ride
-	 * @param date the date of the ride 
-	 * @return collection of rides
+	 * @param desc the text to search
+	 * @return collection of products that contain desc 
 	 */
-	@WebMethod public List<Product> getRides(String from, String to, Date date);
-	
-	/**
-	 * This method retrieves from the database the dates a month for which there are events
-	 * @param from the origin location of a ride
-	 * @param to the destination location of a ride 
-	 * @param date of the month for which days with rides want to be retrieved 
-	 * @return collection of rides
-	 */
-	@WebMethod public List<Date> getThisMonthDatesWithRides(String from, String to, Date date);
+	@WebMethod public List<Product> getProducts(String desc);
 	
 	/**
 	 * This method calls the data access to initialize the database with some events and questions.

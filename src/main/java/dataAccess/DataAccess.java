@@ -80,9 +80,9 @@ public class DataAccess  {
 	    
 		   
 		    //Create sellers 
-			Seller seller1=new Seller("driver1@gmail.com","Aitor Fernandez","Ataun");
-			Seller seller2=new Seller("driver2@gmail.com","Ane Gaztañaga","Orio");
-			Seller seller3=new Seller("driver3@gmail.com","Test driver","Gernika");
+			Seller seller1=new Seller("seller1@gmail.com","Aitor Fernandez","Ataun");
+			Seller seller2=new Seller("seller22@gmail.com","Ane Gaztañaga","Orio");
+			Seller seller3=new Seller("seller3@gmail.com","Test Seller","Gernika");
 
 			
 			//Create products
@@ -151,10 +151,9 @@ public class DataAccess  {
 	 * @param driverEmail to which ride is added
 	 * 
 	 * @return the created ride, or null, or an exception
-	 * @throws RideMustBeLaterThanTodayException if the ride date is before today 
  	 * @throws ProductAlreadyExistException if the same ride already exists for the driver
 	 */
-	public Product createProduct(String title, String description,  float price, int status,  String sellerEmail) throws  ProductAlreadyExistException, RideMustBeLaterThanTodayException {
+	public Product createProduct(String title, String description,  float price, int status,  String sellerEmail) throws  ProductAlreadyExistException {
 		System.out.println(">> DataAccess: createProduct=> title= "+title+" driver="+sellerEmail);
 		try {
 			
