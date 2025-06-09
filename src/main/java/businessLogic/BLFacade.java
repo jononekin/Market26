@@ -41,8 +41,8 @@ public interface BLFacade  {
 	@WebMethod public List<Product> getProducts(String desc);
 	
 	/**
-	 * This method calls the data access to initialize the database with some events and questions.
-	 * It is invoked only when the option "initialize" is declared in the tag dataBaseOpenMode of resources/config.xml file
+	 * This method calls the data access to initialize the database with some sellers and products.
+	 * It is only invoked  when the option "initialize" is declared in the tag dataBaseOpenMode of resources/config.xml file
 	 */	
 	@WebMethod public void initializeBD();
 

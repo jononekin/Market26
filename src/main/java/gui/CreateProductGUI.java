@@ -1,29 +1,17 @@
 package gui;
 
-import java.text.DateFormat;
 import java.util.*;
 import java.util.List;
-
 import javax.swing.*;
-
-import com.toedter.calendar.JCalendar;
-
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
 import businessLogic.BLFacade;
-import configuration.UtilDate;
-import domain.Seller;
 import domain.Product;
-import exceptions.ProductAlreadyExistException;
-import exceptions.RideMustBeLaterThanTodayException;
+
 
 public class CreateProductGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 
-	
 	private String sellerMail;
 	private JTextField fieldTitle=new JTextField();
 	private JTextField fieldDescription=new JTextField();
@@ -48,8 +36,6 @@ public class CreateProductGUI extends JFrame {
 	private JLabel jLabelMsg = new JLabel();
 	private JLabel jLabelError = new JLabel();
 	
-	private List<Date> datesWithEventsCurrentMonth;
-
 
 	public CreateProductGUI(String mail) {
 
@@ -101,11 +87,6 @@ public class CreateProductGUI extends JFrame {
 		
 		this.getContentPane().add(jLabelPrice, null);
 		this.getContentPane().add(jTextFieldPrice, null);
-
-		
-		
-		
-		BLFacade facade = MainGUI.getBusinessLogic();
 		
 		jLabelProductStatus.setBounds(new Rectangle(40, 15, 140, 25));
 		jLabelProductStatus.setBounds(6, 187, 140, 25);
@@ -156,7 +137,6 @@ public class CreateProductGUI extends JFrame {
 			}
 
 		}
-	
 
 	private void jButtonClose_actionPerformed(ActionEvent e) {
 		this.setVisible(false);

@@ -118,29 +118,7 @@ public class DataAccess  {
 		}
 	}
 	
-	/**
-	 * This method returns all the cities where rides depart 
-	 * @return collection of cities
-	 */
-	public List<String> getDepartCities(){
-			TypedQuery<String> query = db.createQuery("SELECT DISTINCT r.from FROM Ride r ORDER BY r.from", String.class);
-			List<String> cities = query.getResultList();
-			return cities;
-		
-	}
-	/**
-	 * This method returns all the arrival destinations, from all rides that depart from a given city  
-	 * 
-	 * @param from the depart location of a ride
-	 * @return all the arrival destinations
-	 */
-	public List<String> getArrivalCities(String from){
-		TypedQuery<String> query = db.createQuery("SELECT DISTINCT r.to FROM Ride r WHERE r.from=?1 ORDER BY r.to",String.class);
-		query.setParameter(1, from);
-		List<String> arrivingCities = query.getResultList(); 
-		return arrivingCities;
-		
-	}
+	
 	/**
 	 * This method creates a ride for a driver
 	 * 
@@ -182,55 +160,25 @@ public class DataAccess  {
 	}
 	
 	/**
-	 * This method retrieves the rides from two locations on a given date 
+	 * This method retrieves the products that contain a desc text from two locations on a given date 
 	 * 
-	 * @param from the origin location of a ride
-	 * @param to the destination location of a ride
-	 * @param date the date of the ride 
-	 * @return collection of rides
+	 * @param desc the text to search
+	 * @return collection of products
 	 */
-	public List<Product> getRides(String from, String to, Date date) {
-		System.out.println(">> DataAccess: getRides=> from= "+from+" to= "+to+" date "+date);
+	public List<Product> getProducts(String desc) {
+		System.out.println(">> DataAccess: getProducts=> from= "+desc);
 
 		List<Product> res = new ArrayList<Product>();	
-		TypedQuery<Product> query = db.createQuery("SELECT r FROM Ride r WHERE r.from=?1 AND r.to=?2 AND r.date=?3",Product.class);   
-		query.setParameter(1, from);
-		query.setParameter(2, to);
-		query.setParameter(3, date);
-		List<Product> rides = query.getResultList();
-	 	 for (Product ride:rides){
-		   res.add(ride);
+		TypedQuery<Product> query = db.createQuery("SELECT p FROM Product p WHERE p.title LIKE ?1",Product.class);   
+		query.setParameter(1, "%"+desc+"%");
+		
+		List<Product> products = query.getResultList();
+	 	 for (Product product:products){
+		   res.add(product);
 		  }
 	 	return res;
 	}
 	
-	/**
-	 * This method retrieves from the database the dates a month for which there are events
-	 * @param from the origin location of a ride
-	 * @param to the destination location of a ride 
-	 * @param date of the month for which days with rides want to be retrieved 
-	 * @return collection of rides
-	 */
-	public List<Date> getThisMonthDatesWithRides(String from, String to, Date date) {
-		System.out.println(">> DataAccess: getEventsMonth");
-		List<Date> res = new ArrayList<Date>();	
-		
-		Date firstDayMonthDate= UtilDate.firstDayMonth(date);
-		Date lastDayMonthDate= UtilDate.lastDayMonth(date);
-				
-		
-		TypedQuery<Date> query = db.createQuery("SELECT DISTINCT r.date FROM Ride r WHERE r.from=?1 AND r.to=?2 AND r.date BETWEEN ?3 and ?4",Date.class);   
-		
-		query.setParameter(1, from);
-		query.setParameter(2, to);
-		query.setParameter(3, firstDayMonthDate);
-		query.setParameter(4, lastDayMonthDate);
-		List<Date> dates = query.getResultList();
-	 	 for (Date d:dates){
-		   res.add(d);
-		  }
-	 	return res;
-	}
 	
 
 public void open(){

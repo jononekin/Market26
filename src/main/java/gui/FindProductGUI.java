@@ -1,15 +1,9 @@
 package gui;
 
 import businessLogic.BLFacade;
-import configuration.UtilDate;
-
-import com.toedter.calendar.JCalendar;
-import domain.Product;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.*;
-import java.text.DateFormat;
 import java.util.*;
 import java.util.List;
 
@@ -18,34 +12,30 @@ import javax.swing.table.DefaultTableModel;
 
 public class FindProductGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
-	private final JLabel jLabelProducts = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Products")); 
+	private final JLabel jLabelProducts = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("FindProductsGUI.Products")); 
 
-	private JButton jButtonSearch = new JButton(ResourceBundle.getBundle("Etiquetas").getString("FindProductGUI.Search")); 
+	private JButton jButtonSearch = new JButton(ResourceBundle.getBundle("Etiquetas").getString("FindProductsGUI.Search")); 
 	private JButton jButtonClose = new JButton(ResourceBundle.getBundle("Etiquetas").getString("Close"));
 
-	// Code for JCalendar
 	
-	private JScrollPane scrollPaneEvents = new JScrollPane();
-
-
+	private JScrollPane scrollPanelProducts = new JScrollPane();
 	private JTable tableProducts= new JTable();
 
 	private DefaultTableModel tableModelProducts;
 
 
 	private String[] columnNamesProducts = new String[] {
-			ResourceBundle.getBundle("Etiquetas").getString("FindProductGUI.Title"), 
-			ResourceBundle.getBundle("Etiquetas").getString("FindProductGUI.Price")
+			ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Title"), 
+			ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Price")
 	};
 	private JTextField jTextFieldSearch;
 
 
-	public FindProductGUI()
-	{
+	public FindProductGUI() {
 
 		this.getContentPane().setLayout(null);
 		this.setSize(new Dimension(700, 500));
-		this.setTitle(ResourceBundle.getBundle("Etiquetas").getString("FindProductGUI.FindProducts"));
+		this.setTitle(ResourceBundle.getBundle("Etiquetas").getString("FindProductsGUI.FindProducts"));
 		jLabelProducts.setBounds(52, 108, 259, 16);
 		this.getContentPane().add(jLabelProducts);
 
@@ -57,38 +47,29 @@ public class FindProductGUI extends JFrame {
 			{
 				jButton2_actionPerformed(e);
 			}
-		});
-		BLFacade facade = MainGUI.getBusinessLogic();
-		
+		});		
 		
 		this.getContentPane().add(jButtonClose, null);
 
+		scrollPanelProducts.setBounds(new Rectangle(52, 137, 459, 150));
 
-
-
-
-		
-
-		scrollPaneEvents.setBounds(new Rectangle(52, 137, 459, 150));
-
-		scrollPaneEvents.setViewportView(tableProducts);
+		scrollPanelProducts.setViewportView(tableProducts);
 		tableModelProducts = new DefaultTableModel(null, columnNamesProducts);
 
 		tableProducts.setModel(tableModelProducts);
 
 		tableModelProducts.setDataVector(null, columnNamesProducts);
-		tableModelProducts.setColumnCount(4); // another column added to allocate ride objects
+		tableModelProducts.setColumnCount(3); // another column added to allocate ride objects
 
 		tableProducts.getColumnModel().getColumn(0).setPreferredWidth(170);
 		tableProducts.getColumnModel().getColumn(1).setPreferredWidth(30);
-		tableProducts.getColumnModel().getColumn(1).setPreferredWidth(30);
 
-		tableProducts.getColumnModel().removeColumn(tableProducts.getColumnModel().getColumn(3)); // not shown in JTable
+		tableProducts.getColumnModel().removeColumn(tableProducts.getColumnModel().getColumn(2)); // not shown in JTable
 
-		this.getContentPane().add(scrollPaneEvents, null);
+		this.getContentPane().add(scrollPanelProducts, null);
 		
 		jTextFieldSearch = new JTextField();
-		jTextFieldSearch.setText(ResourceBundle.getBundle("Etiquetas").getString("FindProductGUI.textField.text")); //$NON-NLS-1$ //$NON-NLS-2$
+		jTextFieldSearch.setText(ResourceBundle.getBundle("Etiquetas").getString("FindProductsGUI.Search")); //$NON-NLS-1$ //$NON-NLS-2$
 		jTextFieldSearch.setBounds(52, 56, 357, 26);
 		getContentPane().add(jTextFieldSearch);
 		jTextFieldSearch.setColumns(10);
@@ -101,8 +82,8 @@ public class FindProductGUI extends JFrame {
 
 					BLFacade facade = MainGUI.getBusinessLogic();
 					List<domain.Product> products=facade.getProducts(jTextFieldSearch.getText());
-					if (products.isEmpty() ) jLabelProducts.setText(ResourceBundle.getBundle("Etiquetas").getString("FindRidesGUI.NoProducts"));
-					else jLabelProducts.setText(ResourceBundle.getBundle("Etiquetas").getString("FindProductGUI.Rides"));
+					if (products.isEmpty() ) jLabelProducts.setText(ResourceBundle.getBundle("Etiquetas").getString("FindProductsGUI.NoProducts"));
+					else jLabelProducts.setText(ResourceBundle.getBundle("Etiquetas").getString("FindProductsGUI.Products"));
 					for (domain.Product product:products){
 						Vector<Object> row = new Vector<Object>();
 						row.add(product.getTitle());
@@ -118,8 +99,7 @@ public class FindProductGUI extends JFrame {
 				}
 				tableProducts.getColumnModel().getColumn(0).setPreferredWidth(170);
 				tableProducts.getColumnModel().getColumn(1).setPreferredWidth(30);
-				tableProducts.getColumnModel().getColumn(1).setPreferredWidth(30);
-				tableProducts.getColumnModel().removeColumn(tableProducts.getColumnModel().getColumn(3)); // not shown in JTable
+				tableProducts.getColumnModel().removeColumn(tableProducts.getColumnModel().getColumn(2)); // not shown in JTable
 		 		
 		 	}
 		 });

@@ -7,7 +7,6 @@ package gui;
 
 import javax.swing.*;
 
-import domain.Seller;
 import businessLogic.BLFacade;
 
 import java.awt.Color;
