@@ -25,6 +25,7 @@ public class Product implements Serializable {
 	private String category;
 	private float price;
 	private Date publicationDate;
+	private String file;
 	
 	private Seller seller;  
 	
@@ -32,7 +33,7 @@ public class Product implements Serializable {
 		super();
 	}
 	
-	public Product(Integer productNumber, String title, String description, float price, int status, String category, Date pubDate, Seller seller) {
+	public Product(Integer productNumber, String title, String description, float price, int status, String category, Date pubDate, String file, Seller seller) {
 		super();
 		this.productNumber = productNumber;
 		this.title = title;
@@ -41,12 +42,14 @@ public class Product implements Serializable {
 		this.category=category;
 		this.price=price;
 		this.publicationDate=pubDate;
+		this.file=file;
 		this.seller = seller;
+
 	}
 
 	
 
-	public Product(String title, String description,  float price,int status, String category, Date pubDate, Seller seller) {
+	public Product(String title, String description,  float price,int status, String category, Date pubDate, String file, Seller seller) {
 		super();
 
 		this.title = title;
@@ -55,6 +58,8 @@ public class Product implements Serializable {
 		this.category=category;
 		this.price=price;
 		this.publicationDate=pubDate;
+		this.file=file;
+
 		this.seller = seller;
 	}
 	

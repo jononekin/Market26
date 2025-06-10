@@ -80,16 +80,16 @@ public class Seller implements Serializable {
 	 * @param publicationDate
 	 * @return Product
 	 */
-	public Product addProduct(String title, String description,  float price, int status, Date publicationDate)  {
+	public Product addProduct(String title, String description,  float price, int status, Date publicationDate, String file)  {
 
-        Product product=new Product(title,description, price, status, "general", publicationDate, this);
+        Product product=new Product(title,description, price, status, "general", publicationDate, file, this);
         products.add(product);
         return product;
 	}
 
-	public Product addProduct(String title, String description,  float price, int status, String category, Date publicationDate)  {
+	public Product addProduct(String title, String description,  float price, int status, String category, Date publicationDate, String file)  {
 
-        Product product=new Product(title,description, price, status, category, publicationDate, this);
+        Product product=new Product(title,description, price, status, category, publicationDate, file, this);
         products.add(product);
         return product;
 	}

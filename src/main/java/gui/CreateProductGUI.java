@@ -53,6 +53,8 @@ public class CreateProductGUI extends JFrame {
 	private JLabel jLabelMsg = new JLabel();
 	private JLabel jLabelError = new JLabel();
 	private JFrame thisFrame;
+	private final JButton btnNewButton_1 = new JButton("Mostrar imagen"); //$NON-NLS-1$ //$NON-NLS-2$
+	private final JButton btnNewButton_2 = new JButton("grabar Imagen"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	public CreateProductGUI(String mail) {
 
@@ -84,7 +86,7 @@ public class CreateProductGUI extends JFrame {
 						float price = Float.parseFloat(jTextFieldPrice.getText());
 						String s=(String)jComboBoxStatus.getSelectedItem();
 						int numStatus=status.indexOf(s);
-						facade.createProduct(fieldTitle.getText(), fieldDescription.getText(), price, numStatus, sellerMail);
+						facade.createProduct(fieldTitle.getText(), fieldDescription.getText(), price, numStatus, sellerMail, selectedFile);
 						jLabelMsg.setText(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.ProductCreated"));
 					
 					} catch (Exception e1) {
@@ -154,6 +156,7 @@ public class CreateProductGUI extends JFrame {
 
 		        if (result == JFileChooser.APPROVE_OPTION) {
 		            selectedFile = fileChooser.getSelectedFile();
+		            
 		            irudia = selectedFile.getAbsolutePath();
 		            setVisible(true);
 		            panel_1.removeAll();
@@ -169,6 +172,42 @@ public class CreateProductGUI extends JFrame {
 		panel_1 = new JPanel();
 		panel_1.setBounds(440, 192, 124, 86);
 		getContentPane().add(panel_1);
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String imagePath = selectedFile.getAbsolutePath();
+                if (imagePath != null && !imagePath.isEmpty()) {
+                    File imageFile = new File(imagePath);
+                    if (imageFile.exists()) {
+                        try {
+                            Desktop.getDesktop().open(imageFile);
+                        } catch (IOException ex) {
+                            //textArea.setText(ResourceBundle.getBundle("Etiquetas").getString("ErreklamazioaTratatuGUI.ErroreaIrekitzean"));
+                        }
+			}}}
+		});
+		btnNewButton_1.setBounds(393, 307, 164, 29);
+		
+		getContentPane().add(btnNewButton_1);
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			
+				try {
+					BufferedImage img = ImageIO.read(targetFile);
+					
+					String path="src/main/resources/images/";
+				    File outputfile = new File(path+targetFile.getName());
+
+				   ImageIO.write(img, "png", outputfile);  // ignore returned boolean
+				   System.out.println("file stored "+img);
+				} catch(IOException ex) {
+				 //System.out.println("Write error for " + outputfile.getPath()  ": " + ex.getMessage());
+				  }
+				
+			}
+		});
+		btnNewButton_2.setBounds(137, 307, 117, 29);
+		
+		getContentPane().add(btnNewButton_2);
 		
 	}	 
 	public void setTarget(File reference)

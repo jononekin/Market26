@@ -1,6 +1,8 @@
 package dataAccess;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -77,17 +80,17 @@ public class DataAccess  {
 			Date today = UtilDate.trim(new Date());
 		
 			
-			seller1.addProduct("futbol baloia", "oso polita, gutxi erabilita", 10, 2, "kirola", today);
-			seller1.addProduct("salomon mendiko botak", "44 zenbakia, 3 ateraldi",20,  2, "kirola", today);
-			seller1.addProduct("samsung 42\" telebista", "berria, erabili gabe", 175, 1, "elektronika", today);
+			seller1.addProduct("futbol baloia", "oso polita, gutxi erabilita", 10, 2, "kirola", today, null);
+			seller1.addProduct("salomon mendiko botak", "44 zenbakia, 3 ateraldi",20,  2, "kirola", today, null);
+			seller1.addProduct("samsung 42\" telebista", "berria, erabili gabe", 175, 1, "elektronika", today, null);
 
 
-			seller2.addProduct("imac 27", "7 urte, dena ondo dabil", 1, 200,  "elektronika", today);
-			seller2.addProduct("iphone 17", "oso gutxi erabilita", 2, 400, "elektronika", today);
-			seller2.addProduct("orbea mendiko bizikleta", "29\" 10 urte, mantenua behar du", 4,225, "kirola", today);
-			seller2.addProduct("polar kilor erlojua", "Vantage M, ondo dago", 3, 30, "kirola", today);
+			seller2.addProduct("imac 27", "7 urte, dena ondo dabil", 1, 200,  "elektronika",today, null);
+			seller2.addProduct("iphone 17", "oso gutxi erabilita", 2, 400, "elektronika", today, null);
+			seller2.addProduct("orbea mendiko bizikleta", "29\" 10 urte, mantenua behar du", 4,225, "kirola", today, null);
+			seller2.addProduct("polar kilor erlojua", "Vantage M, ondo dago", 3, 30, "kirola", today, null);
 
-			seller3.addProduct("sukaldeko mahaia", "1.8*0.8, 4 aulkiekin. Prezio finkoa", 4,45, "etxea", today);
+			seller3.addProduct("sukaldeko mahaia", "1.8*0.8, 4 aulkiekin. Prezio finkoa", 4,45, "etxea", today, null);
 
 			
 			db.persist(seller1);
@@ -116,7 +119,7 @@ public class DataAccess  {
 	 * @return Product
  	 * @throws ProductAlreadyExistException if the same product already exists for the seller
 	 */
-	public Product createProduct(String title, String description,  float price, int status,  String sellerEmail) throws  ProductAlreadyExistException {
+	public Product createProduct(String title, String description,  float price, int status,  String sellerEmail, File file) throws  ProductAlreadyExistException {
 		System.out.println(">> DataAccess: createProduct=> title= "+title+" seller="+sellerEmail);
 		try {
 			
@@ -129,10 +132,21 @@ public class DataAccess  {
 			}
 			Date today = UtilDate.trim(new Date());
 
-			Product product = seller.addProduct(title, description, price, status, today);
+			Product product = seller.addProduct(title, description, price, status, today, file.getName());
 			//next instruction can be obviated
 			db.persist(seller); 
 			db.getTransaction().commit();
+			try {
+				BufferedImage img = ImageIO.read(file);
+				
+				String path="src/main/resources/images/";
+			    File outputfile = new File(path+file.getName());
+
+			   ImageIO.write(img, "png", outputfile);  // ignore returned boolean
+			   System.out.println("file stored "+img);
+			} catch(IOException ex) {
+			 //System.out.println("Write error for " + outputfile.getPath()  ": " + ex.getMessage());
+			  }
 
 			return product;
 		} catch (NullPointerException e) {

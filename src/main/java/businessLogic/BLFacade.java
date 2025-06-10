@@ -1,5 +1,6 @@
 package businessLogic;
 
+import java.io.File;
 import java.util.List;
 
 import domain.Product;
@@ -27,7 +28,7 @@ public interface BLFacade  {
 	 * @return Product
 	 */
    @WebMethod
-	public Product createProduct(String title, String description, float price, int status, String sellerEmail) throws  ProductAlreadyExistException;
+	public Product createProduct(String title, String description, float price, int status, String sellerEmail, File file) throws  ProductAlreadyExistException;
 	
 	
 	/**
