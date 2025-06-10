@@ -36,8 +36,8 @@ public class MainGUI extends JFrame {
 		return appFacadeInterface;
 	}
 	 
-	public static void setBussinessLogic (BLFacade afi){
-		appFacadeInterface=afi;
+	public static void setBussinessLogic (BLFacade facade){
+		appFacadeInterface=facade;
 	}
 	protected JLabel jLabelSelectOption;
 	private JRadioButton rdbtnNewRadioButton;
@@ -54,7 +54,6 @@ public class MainGUI extends JFrame {
 
 		this.sellerMail=mail;
 		
-		// this.setSize(271, 295);
 		this.setSize(495, 290);
 		jLabelSelectOption = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.SelectOption"));
 		jLabelSelectOption.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -65,7 +64,6 @@ public class MainGUI extends JFrame {
 		rdbtnNewRadioButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Locale.setDefault(new Locale("en"));
-				System.out.println("Locale: "+Locale.getDefault());
 				paintAgain();				}
 		});
 		buttonGroup.add(rdbtnNewRadioButton);
@@ -74,7 +72,6 @@ public class MainGUI extends JFrame {
 		rdbtnNewRadioButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Locale.setDefault(new Locale("eus"));
-				System.out.println("Locale: "+Locale.getDefault());
 				paintAgain();				}
 		});
 		buttonGroup.add(rdbtnNewRadioButton_1);
@@ -83,7 +80,6 @@ public class MainGUI extends JFrame {
 		rdbtnNewRadioButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Locale.setDefault(new Locale("es"));
-				System.out.println("Locale: "+Locale.getDefault());
 				paintAgain();
 			}
 		});

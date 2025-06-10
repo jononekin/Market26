@@ -35,10 +35,11 @@ public class CreateProductGUI extends JFrame {
 	private JButton jButtonClose = new JButton(ResourceBundle.getBundle("Etiquetas").getString("Close"));
 	private JLabel jLabelMsg = new JLabel();
 	private JLabel jLabelError = new JLabel();
-	
+	private JFrame thisFrame;
 
 	public CreateProductGUI(String mail) {
 
+		thisFrame=this;
 		this.sellerMail=mail;
 		this.getContentPane().setLayout(null);
 		this.setSize(new Dimension(604, 370));
@@ -56,14 +57,30 @@ public class CreateProductGUI extends JFrame {
 
 		jButtonCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				jButtonCreate_actionPerformed(e);
+				jLabelMsg.setText("");
+				String error=field_Errors();
+				if (error!=null) 
+					jLabelMsg.setText(error);
+				else
+					try {
+						BLFacade facade = MainGUI.getBusinessLogic();
+						float price = Float.parseFloat(jTextFieldPrice.getText());
+						String s=(String)jComboBoxStatus.getSelectedItem();
+						int numStatus=status.indexOf(s);
+						facade.createProduct(fieldTitle.getText(), fieldDescription.getText(), price, numStatus, sellerMail);
+						jLabelMsg.setText(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.ProductCreated"));
+					
+					} catch (Exception e1) {
+
+						// TODO Auto-generated catch block
+						jLabelMsg.setText(e1.getMessage());
+					}
 			}
 		});
 		jButtonClose.setBounds(new Rectangle(275, 263, 130, 30));
 		jButtonClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				jButtonClose_actionPerformed(e);
-			}
+				thisFrame.setVisible(false);			}
 		});
 
 		jLabelMsg.setBounds(new Rectangle(275, 214, 305, 20));
@@ -72,10 +89,8 @@ public class CreateProductGUI extends JFrame {
 		jLabelError.setBounds(new Rectangle(6, 231, 320, 20));
 		jLabelError.setForeground(Color.red);
 		
-	    status=new ArrayList<String>(Arrays.asList("a","b","c","d"));
+	    status=getStatus();
 		for(String s:status) statusOptions.addElement(s);
-		
-		
 
 		this.getContentPane().add(jLabelMsg, null);
 		this.getContentPane().add(jLabelError, null);
@@ -110,37 +125,7 @@ public class CreateProductGUI extends JFrame {
 		getContentPane().add(jComboBoxStatus);
 		
 	}	 
-	private void jButtonCreate_actionPerformed(ActionEvent e) {
-		jLabelMsg.setText("");
-		String error=field_Errors();
-		if (error!=null) 
-			jLabelMsg.setText(error);
-		else
-			try {
-				BLFacade facade = MainGUI.getBusinessLogic();
-				float price = Float.parseFloat(jTextFieldPrice.getText());
-				String s=(String)jComboBoxStatus.getSelectedItem();
-				System.out.println("status "+s);
-				int numStatus=status.indexOf(s);
-				System.out.println("status "+numStatus);
 
-				Product p=facade.createProduct(fieldTitle.getText(), fieldDescription.getText(), price, numStatus, sellerMail);
-				System.out.println("Product created "+p);
-				jLabelMsg.setText(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.ProductCreated"));
-
-			
-			//} catch (ProductAlreadyExistException e1) {
-			} catch (Exception e1) {
-
-				// TODO Auto-generated catch block
-				jLabelMsg.setText(e1.getMessage());
-			}
-
-		}
-
-	private void jButtonClose_actionPerformed(ActionEvent e) {
-		this.setVisible(false);
-	}
 	private String field_Errors() {
 		
 		try {
@@ -160,10 +145,20 @@ public class CreateProductGUI extends JFrame {
 
 			return  ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.ErrorNumber");		
 		} catch (Exception e1) {
-
 			e1.printStackTrace();
 			return null;
 
 		}
 	}
+	private ArrayList<String> getStatus() {
+		String lang=Locale.getDefault().toString();
+		if (lang.compareTo("en")==0) 
+			return new ArrayList<String>(Arrays.asList("New","Very Good","Acceptable","Very Used"));
+		if (lang.compareTo("es")==0) 
+			return new ArrayList<String>(Arrays.asList("Nuevo","Muy Bueno","Aceptable","Lo ha dado todo"));
+		if (lang.compareTo("eus")==0) 
+			return new ArrayList<String>(Arrays.asList("Berria","Oso Ona","Egokia","Oso zaharra"));
+		return null;
+	}
+	
 }

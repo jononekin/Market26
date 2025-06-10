@@ -1,9 +1,7 @@
 package businessLogic;
 
-import java.util.Date;
 import java.util.List;
 
-//import domain.Booking;
 import domain.Product;
 import exceptions.ProductAlreadyExistException;
 

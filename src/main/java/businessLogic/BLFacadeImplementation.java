@@ -1,16 +1,11 @@
 package businessLogic;
-import java.util.Date;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
-import configuration.ConfigXML;
 import dataAccess.DataAccess;
 import domain.Product;
-import domain.Seller;
-import exceptions.RideMustBeLaterThanTodayException;
 import exceptions.ProductAlreadyExistException;
 
 /**
@@ -22,19 +17,11 @@ public class BLFacadeImplementation  implements BLFacade {
 
 	public BLFacadeImplementation()  {		
 		System.out.println("Creating BLFacadeImplementation instance");
-		
-		
-		    dbManager=new DataAccess();
-		    
-		//dbManager.close();
-		
+		dbManager=new DataAccess();		
 	}
 	
     public BLFacadeImplementation(DataAccess da)  {
-		
 		System.out.println("Creating BLFacadeImplementation instance with DataAccess parameter");
-		ConfigXML c=ConfigXML.getInstance();
-		
 		dbManager=da;		
 	}
     
@@ -64,7 +51,6 @@ public class BLFacadeImplementation  implements BLFacade {
     
 	public void close() {
 		DataAccess dB4oManager=new DataAccess();
-
 		dB4oManager.close();
 
 	}

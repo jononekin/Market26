@@ -11,18 +11,19 @@ import javax.swing.table.DefaultTableModel;
 
 
 public class FindProductGUI extends JFrame {
+	
 	private static final long serialVersionUID = 1L;
 	private final JLabel jLabelProducts = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("FindProductsGUI.Products")); 
 
 	private JButton jButtonSearch = new JButton(ResourceBundle.getBundle("Etiquetas").getString("FindProductsGUI.Search")); 
 	private JButton jButtonClose = new JButton(ResourceBundle.getBundle("Etiquetas").getString("Close"));
 
-	
 	private JScrollPane scrollPanelProducts = new JScrollPane();
 	private JTable tableProducts= new JTable();
 
 	private DefaultTableModel tableModelProducts;
 
+	private JFrame thisFrame;
 
 	private String[] columnNamesProducts = new String[] {
 			ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Title"), 
@@ -32,7 +33,7 @@ public class FindProductGUI extends JFrame {
 
 
 	public FindProductGUI() {
-
+		thisFrame=this;
 		this.getContentPane().setLayout(null);
 		this.setSize(new Dimension(700, 500));
 		this.setTitle(ResourceBundle.getBundle("Etiquetas").getString("FindProductsGUI.FindProducts"));
@@ -45,7 +46,8 @@ public class FindProductGUI extends JFrame {
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				jButton2_actionPerformed(e);
+				thisFrame.setVisible(false);
+
 			}
 		});		
 		
@@ -78,7 +80,7 @@ public class FindProductGUI extends JFrame {
 		 	public void actionPerformed(ActionEvent e) {
 		 		try {
 					tableModelProducts.setDataVector(null, columnNamesProducts);
-					tableModelProducts.setColumnCount(3); // another column added to allocate ride objects
+					tableModelProducts.setColumnCount(3); // another column added to allocate product object
 
 					BLFacade facade = MainGUI.getBusinessLogic();
 					List<domain.Product> products=facade.getProducts(jTextFieldSearch.getText());
@@ -88,11 +90,9 @@ public class FindProductGUI extends JFrame {
 						Vector<Object> row = new Vector<Object>();
 						row.add(product.getTitle());
 						row.add(product.getPrice());
-						row.add(product); // product object added in order to obtain it with tableModelProducts.getValueAt(i,3)
+						row.add(product); // product object added in order to obtain it with tableModelProducts.getValueAt(i,2)
 						tableModelProducts.addRow(row);		
 					}
-
-
 				} catch (Exception e1) {
 
 					e1.printStackTrace();
@@ -105,10 +105,5 @@ public class FindProductGUI extends JFrame {
 		 });
 		jButtonSearch.setBounds(427, 56, 117, 29);
 		getContentPane().add(jButtonSearch);
-
-	}
-	
-	private void jButton2_actionPerformed(ActionEvent e) {
-		this.setVisible(false);
 	}
 }

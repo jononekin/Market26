@@ -10,7 +10,6 @@ import javax.xml.ws.Service;
 
 import configuration.ConfigXML;
 import dataAccess.DataAccess;
-import domain.Seller;
 import businessLogic.BLFacade;
 import businessLogic.BLFacadeImplementation;
 
@@ -20,16 +19,8 @@ public class ApplicationLauncher {
 	
 	public static void main(String[] args) {
 
-		ConfigXML c=ConfigXML.getInstance();
-	
-		System.out.println(c.getLocale());
-		
+		ConfigXML c=ConfigXML.getInstance();		
 		Locale.setDefault(new Locale(c.getLocale()));
-		
-		System.out.println("Locale: "+Locale.getDefault());
-		
-	    Seller seller=new Seller("seller3@gmail.com","Test Seller", "Ataun");
-
 		
 		MainGUI a=new MainGUI("seller3@gmail.com");
 		a.setVisible(true);
@@ -41,18 +32,13 @@ public class ApplicationLauncher {
 			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 			
 			if (c.isBusinessLogicLocal()) {
-			
 				DataAccess da= new DataAccess();
 				appFacadeInterface=new BLFacadeImplementation(da);
-
-				
 			}
-			
 			else { //If remote
 				
-				 String serviceName= "http://"+c.getBusinessLogicNode() +":"+ c.getBusinessLogicPort()+"/ws/"+c.getBusinessLogicName()+"?wsdl";
-				 
-				URL url = new URL(serviceName);
+				 String serviceName= "http://"+c.getBusinessLogicNode() +":"+ c.getBusinessLogicPort()+"/ws/"+c.getBusinessLogicName()+"?wsdl";	 
+				 URL url = new URL(serviceName);
 
 		 
 		        //1st argument refers to wsdl document above
@@ -61,13 +47,10 @@ public class ApplicationLauncher {
 		 
 		        Service service = Service.create(url, qname);
 
-		         appFacadeInterface = service.getPort(BLFacade.class);
+		        appFacadeInterface = service.getPort(BLFacade.class);
 			} 
 			
 			MainGUI.setBussinessLogic(appFacadeInterface);
-
-		
-
 			
 		}catch (Exception e) {
 			a.jLabelSelectOption.setText("Error: "+e.toString());
@@ -75,7 +58,6 @@ public class ApplicationLauncher {
 			
 			System.out.println("Error in ApplicationLauncher: "+e.toString());
 		}
-		//a.pack();
 
 
 	}
