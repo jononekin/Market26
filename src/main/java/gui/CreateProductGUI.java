@@ -2,14 +2,30 @@ package gui;
 
 import java.util.*;
 import java.util.List;
+import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+import java.awt.image.BufferedImage;
+
 import businessLogic.BLFacade;
 import domain.Product;
 
 
 public class CreateProductGUI extends JFrame {
+	
+    File targetFile;
+    BufferedImage targetImg;
+    public JPanel panel_1;
+    private static final int baseSize = 128;
+    private static final String basePath = "C:\\Documents and Settings\\Administrator\\Desktop\\Images";
+	
 	private static final long serialVersionUID = 1L;
 
 	private String sellerMail;
@@ -21,7 +37,8 @@ public class CreateProductGUI extends JFrame {
 	private JLabel jLabelProductStatus = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Status"));
 	private JLabel jLabelPrice = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Price"));
 	private JTextField jTextFieldPrice = new JTextField();
-
+	private File selectedFile;
+    private String irudia;
 
 
 	private JScrollPane scrollPaneEvents = new JScrollPane();
@@ -124,8 +141,60 @@ public class CreateProductGUI extends JFrame {
 		jComboBoxStatus.setBounds(132, 192, 114, 27);
 		getContentPane().add(jComboBoxStatus);
 		
-	}	 
+		JButton btnNewButton = new JButton(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.LoadPicture")); //$NON-NLS-1$ //$NON-NLS-2$
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser();
+				FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG & GIF", "jpg", "gif");
+				fileChooser.setFileFilter(filter);
+		        int result = fileChooser.showOpenDialog(null);  
 
+		        fileChooser.setBounds(30, 148, 320, 80);
+
+
+		        if (result == JFileChooser.APPROVE_OPTION) {
+		            selectedFile = fileChooser.getSelectedFile();
+		            irudia = selectedFile.getAbsolutePath();
+		            setVisible(true);
+		            panel_1.removeAll();
+		            panel_1.repaint();
+		            setTarget(selectedFile);
+
+		            }
+			}
+		});
+		btnNewButton.setBounds(275, 186, 117, 29);
+		getContentPane().add(btnNewButton);
+		
+		panel_1 = new JPanel();
+		panel_1.setBounds(440, 192, 124, 86);
+		getContentPane().add(panel_1);
+		
+	}	 
+	public void setTarget(File reference)
+    {
+		 System.out.println("Entra en setTarget "+reference.toString());
+        try {
+            targetFile = reference;
+            targetImg = rescale(ImageIO.read(reference));
+        } catch (IOException ex) {
+            //Logger.getLogger(MainAppFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        panel_1.setLayout(new BorderLayout(0, 0));
+        
+        panel_1.add(new JLabel(new ImageIcon(targetImg))); 
+        setVisible(true);
+    }
+	public BufferedImage rescale(BufferedImage originalImage)
+    {
+		System.out.println("rescale "+originalImage);
+        BufferedImage resizedImage = new BufferedImage(baseSize, baseSize, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(originalImage, 0, 0, baseSize, baseSize, null);
+        g.dispose();
+        return resizedImage;
+    }
 	private String field_Errors() {
 		
 		try {
@@ -160,5 +229,4 @@ public class CreateProductGUI extends JFrame {
 			return new ArrayList<String>(Arrays.asList("Berria","Oso Ona","Egokia","Oso zaharra"));
 		return null;
 	}
-	
 }

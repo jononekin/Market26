@@ -51,6 +51,8 @@ public class ApplicationLauncher {
 			} 
 			
 			MainGUI.setBussinessLogic(appFacadeInterface);
+			//ErreklamatuGUI g=new ErreklamatuGUI();
+			//g.setVisible(true);
 			
 		}catch (Exception e) {
 			a.jLabelSelectOption.setText("Error: "+e.toString());
