@@ -1,5 +1,6 @@
 package dataAccess;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +29,10 @@ import exceptions.ProductAlreadyExistException;
 public class DataAccess  {
 	private  EntityManager  db;
 	private  EntityManagerFactory emf;
+    private static final int baseSize = 160;
+
+	private static final String basePath="src/main/resources/images/";
+
 
 
 	ConfigXML c=ConfigXML.getInstance();
@@ -87,10 +92,10 @@ public class DataAccess  {
 
 			seller2.addProduct("imac 27", "7 urte, dena ondo dabil", 1, 200,  "elektronika",today, null);
 			seller2.addProduct("iphone 17", "oso gutxi erabilita", 2, 400, "elektronika", today, null);
-			seller2.addProduct("orbea mendiko bizikleta", "29\" 10 urte, mantenua behar du", 4,225, "kirola", today, null);
+			seller2.addProduct("orbea mendiko bizikleta", "29\" 10 urte, mantenua behar du", 3,225, "kirola", today, null);
 			seller2.addProduct("polar kilor erlojua", "Vantage M, ondo dago", 3, 30, "kirola", today, null);
 
-			seller3.addProduct("sukaldeko mahaia", "1.8*0.8, 4 aulkiekin. Prezio finkoa", 4,45, "etxea", today, null);
+			seller3.addProduct("sukaldeko mahaia", "1.8*0.8, 4 aulkiekin. Prezio finkoa", 3,45, "etxea", today, null);
 
 			
 			db.persist(seller1);
@@ -136,6 +141,7 @@ public class DataAccess  {
 			//next instruction can be obviated
 			db.persist(seller); 
 			db.getTransaction().commit();
+
 			try {
 				BufferedImage img = ImageIO.read(file);
 				
@@ -148,8 +154,11 @@ public class DataAccess  {
 			 //System.out.println("Write error for " + outputfile.getPath()  ": " + ex.getMessage());
 			  }
 
+			   System.out.println("hasta aqui");
+
 			return product;
 		} catch (NullPointerException e) {
+			   e.printStackTrace();
 			// TODO Auto-generated catch block
 			db.getTransaction().commit();
 			return null;
@@ -199,6 +208,30 @@ public void open(){
 		
 	}
 
+	public BufferedImage getFile(String fileName) {
+		File file=new File(basePath+fileName);
+		BufferedImage targetImg=null;
+		try {
+             targetImg = rescale(ImageIO.read(file));
+        } catch (IOException ex) {
+            //Logger.getLogger(MainAppFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+		return targetImg;
+
+	}
+	
+	public BufferedImage rescale(BufferedImage originalImage)
+    {
+		System.out.println("rescale "+originalImage);
+        BufferedImage resizedImage = new BufferedImage(baseSize, baseSize, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(originalImage, 0, 0, baseSize, baseSize, null);
+        g.dispose();
+        return resizedImage;
+    }
+	
+	
+	
 	public void close(){
 		db.close();
 		System.out.println("DataAcess closed");

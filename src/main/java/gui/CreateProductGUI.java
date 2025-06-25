@@ -38,8 +38,6 @@ public class CreateProductGUI extends JFrame {
 	private JLabel jLabelProductStatus = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Status"));
 	private JLabel jLabelPrice = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Price"));
 	private JTextField jTextFieldPrice = new JTextField();
-	private File selectedFile;
-    private String irudia;
 
 
 	private JScrollPane scrollPaneEvents = new JScrollPane();
@@ -87,7 +85,7 @@ public class CreateProductGUI extends JFrame {
 						float price = Float.parseFloat(jTextFieldPrice.getText());
 						String s=(String)jComboBoxStatus.getSelectedItem();
 						int numStatus=status.indexOf(s);
-						facade.createProduct(fieldTitle.getText(), fieldDescription.getText(), price, numStatus, sellerMail, selectedFile);
+						facade.createProduct(fieldTitle.getText(), fieldDescription.getText(), price, numStatus, sellerMail, targetFile);
 						jLabelMsg.setText(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.ProductCreated"));
 					
 					} catch (Exception e1) {
@@ -154,15 +152,20 @@ public class CreateProductGUI extends JFrame {
 
 		        fileChooser.setBounds(30, 148, 320, 80);
 
-
 		        if (result == JFileChooser.APPROVE_OPTION) {
-		            selectedFile = fileChooser.getSelectedFile();
-		            
-		            irudia = selectedFile.getAbsolutePath();
-		            setVisible(true);
+		            targetFile = fileChooser.getSelectedFile();
 		            panel_1.removeAll();
 		            panel_1.repaint();
-		            setTarget(selectedFile);
+
+		            try {
+		                targetImg = rescale(ImageIO.read(targetFile));
+		            } catch (IOException ex) {
+		                //Logger.getLogger(MainAppFrame.class.getName()).log(Level.SEVERE, null, ex);
+		            }
+		            
+		            panel_1.setLayout(new BorderLayout(0, 0));
+		            panel_1.add(new JLabel(new ImageIcon(targetImg))); 
+		            setVisible(true);
 
 		            }
 			}
@@ -175,7 +178,7 @@ public class CreateProductGUI extends JFrame {
 		getContentPane().add(panel_1);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String imagePath = selectedFile.getAbsolutePath();
+				String imagePath = targetFile.getAbsolutePath();
                 if (imagePath != null && !imagePath.isEmpty()) {
                     File imageFile = new File(imagePath);
                     if (imageFile.exists()) {
@@ -210,24 +213,9 @@ public class CreateProductGUI extends JFrame {
 		getContentPane().add(btnNewButton_2);
 		
 	}	 
-	public void setTarget(File reference)
-    {
-		 System.out.println("Entra en setTarget "+reference.toString());
-        try {
-            targetFile = reference;
-            targetImg = rescale(ImageIO.read(reference));
-        } catch (IOException ex) {
-            //Logger.getLogger(MainAppFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        panel_1.setLayout(new BorderLayout(0, 0));
-        
-        panel_1.add(new JLabel(new ImageIcon(targetImg))); 
-        setVisible(true);
-    }
+
 	public BufferedImage rescale(BufferedImage originalImage)
     {
-		System.out.println("rescale "+originalImage);
         BufferedImage resizedImage = new BufferedImage(baseSize, baseSize, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = resizedImage.createGraphics();
         g.drawImage(originalImage, 0, 0, baseSize, baseSize, null);

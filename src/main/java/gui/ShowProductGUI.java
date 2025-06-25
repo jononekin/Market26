@@ -23,8 +23,8 @@ public class ShowProductGUI extends JFrame {
     File targetFile;
     BufferedImage targetImg;
     public JPanel panel_1;
-    private static final int baseSize = 128;
-    private static final String basePath = "C:\\Documents and Settings\\Administrator\\Desktop\\Images";
+    private static final int baseSize = 160;
+	private static final String basePath="src/main/resources/images/";
 	
 	private static final long serialVersionUID = 1L;
 
@@ -59,11 +59,13 @@ public class ShowProductGUI extends JFrame {
 		this.setTitle(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.CreateProduct"));
 
 		fieldTitle.setText(p.getTitle());
-		//fieldDescription.setText(p.getDescription());
-		fieldDescription.setText(p.getFile());
+		fieldDescription.setText(p.getDescription());
 
 		fieldPrice.setText(Float.toString(p.getPrice()));
 		labelStatus.setText(getStatus().get(p.getStatus()));
+		
+		
+		
 		
 		jLabelTitle.setBounds(new Rectangle(6, 56, 92, 20));
 		
@@ -123,31 +125,26 @@ public class ShowProductGUI extends JFrame {
 		labelStatus.setBounds(137, 198, 101, 16);
 		getContentPane().add(labelStatus);
 		
-	}	 
-	public void setTarget(File reference)
-    {
-		 System.out.println("Entra en setTarget "+reference.toString());
-        try {
-            targetFile = reference;
-            targetImg = rescale(ImageIO.read(reference));
-        } catch (IOException ex) {
-            //Logger.getLogger(MainAppFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        panel_1.setLayout(new BorderLayout(0, 0));
-        
+		
+		BLFacade facade = MainGUI.getBusinessLogic();
+		
+		Image img=facade.downloadImage(p.getFile());
+		targetImg = rescale((BufferedImage)img);
+		
+		panel_1.setLayout(new BorderLayout(0, 0));
         panel_1.add(new JLabel(new ImageIcon(targetImg))); 
         setVisible(true);
-    }
+		
+	}	 
 	public BufferedImage rescale(BufferedImage originalImage)
     {
-		System.out.println("rescale "+originalImage);
         BufferedImage resizedImage = new BufferedImage(baseSize, baseSize, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = resizedImage.createGraphics();
         g.drawImage(originalImage, 0, 0, baseSize, baseSize, null);
         g.dispose();
         return resizedImage;
     }
+	
 	
 	private ArrayList<String> getStatus() {
 		String lang=Locale.getDefault().toString();
@@ -159,5 +156,6 @@ public class ShowProductGUI extends JFrame {
 			return new ArrayList<String>(Arrays.asList("Berria","Oso Ona","Egokia","Oso zaharra"));
 		return null;
 	}
+	
 }
 

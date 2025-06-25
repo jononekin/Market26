@@ -8,12 +8,20 @@ import javax.jws.WebService;
 import dataAccess.DataAccess;
 import domain.Product;
 import exceptions.ProductAlreadyExistException;
+import java.awt.image.BufferedImage;
+import java.awt.Image;
+import javax.imageio.ImageIO;
+import java.io.IOException;
+
 
 /**
  * It implements the business logic as a web service.
  */
 @WebService(endpointInterface = "businessLogic.BLFacade")
 public class BLFacadeImplementation  implements BLFacade {
+	 private static final int baseSize = 160;
+
+		private static final String basePath="src/main/resources/images/";
 	DataAccess dbManager;
 
 	public BLFacadeImplementation()  {		
@@ -48,6 +56,12 @@ public class BLFacadeImplementation  implements BLFacade {
 		dbManager.close();
 		return rides;
 	}
+	/**
+	    * {@inheritDoc}
+	    */
+	@WebMethod public BufferedImage getFile(String fileName) {
+		return dbManager.getFile(fileName);
+	}
 
     
 	public void close() {
@@ -65,6 +79,19 @@ public class BLFacadeImplementation  implements BLFacade {
 		dbManager.initializeDB();
 		dbManager.close();
 	}
+    /**
+	 * {@inheritDoc}
+	 */
+    @WebMethod public Image downloadImage(String imageName) {
+        File image = new File(basePath+imageName);
+        try {
+            return ImageIO.read(image);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
+    
 }
 

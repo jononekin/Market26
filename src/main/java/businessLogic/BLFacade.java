@@ -8,6 +8,9 @@ import exceptions.ProductAlreadyExistException;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
+import java.awt.image.BufferedImage;
+import java.awt.Image;
+
  
 /**
  * Interface that specifies the business logic.
@@ -44,6 +47,10 @@ public interface BLFacade  {
 	 * It is only invoked  when the option "initialize" is declared in the tag dataBaseOpenMode of resources/config.xml file
 	 */	
 	@WebMethod public void initializeBD();
+	
+		
+	@WebMethod public Image downloadImage(String imageName);
+	
 
 	
 }
