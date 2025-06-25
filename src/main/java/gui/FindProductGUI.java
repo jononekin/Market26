@@ -1,6 +1,8 @@
 package gui;
 
 import businessLogic.BLFacade;
+import domain.Product;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -33,6 +35,7 @@ public class FindProductGUI extends JFrame {
 
 
 	public FindProductGUI() {
+		tableProducts.setEnabled(false);
 		thisFrame=this;
 		this.getContentPane().setLayout(null);
 		this.setSize(new Dimension(700, 500));
@@ -105,5 +108,32 @@ public class FindProductGUI extends JFrame {
 		 });
 		jButtonSearch.setBounds(427, 56, 117, 29);
 		getContentPane().add(jButtonSearch);
+		
+		tableProducts.addMouseListener(new MouseAdapter() {
+		    public void mousePressed(MouseEvent mouseEvent) {
+		        JTable table =(JTable) mouseEvent.getSource();
+		        Point point = mouseEvent.getPoint();
+		        int row = table.rowAtPoint(point);
+		        System.out.println("row "+row);
+	            Product p=(Product) tableModelProducts.getValueAt(row, 2);
+	            System.out.println("Product "+p);
+	            new ShowProductGUI(p);
+	            
+		        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1 && row != -1) {
+		            // so we know there is a doubleclick
+		            // a row has been selected before
+		            // the click was inside the JTable filled with data
+
+		            // the row number is the visual row number
+		            // when filtering or sorting it is not the model's row number
+		            // this line takes care of that
+		            int modelRow = table.convertRowIndexToModel(row);
+		            
+		            System.out.println("Product "+p);
+
+		            // your valueChanged overridden method
+		        }
+		    }
+		});
 	}
 }

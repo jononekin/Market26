@@ -24,7 +24,8 @@ public class CreateProductGUI extends JFrame {
     BufferedImage targetImg;
     public JPanel panel_1;
     private static final int baseSize = 128;
-    private static final String basePath = "C:\\Documents and Settings\\Administrator\\Desktop\\Images";
+	private static final String basePath="src/main/resources/images/";
+
 	
 	private static final long serialVersionUID = 1L;
 
@@ -194,8 +195,7 @@ public class CreateProductGUI extends JFrame {
 				try {
 					BufferedImage img = ImageIO.read(targetFile);
 					
-					String path="src/main/resources/images/";
-				    File outputfile = new File(path+targetFile.getName());
+				    File outputfile = new File(basePath+targetFile.getName());
 
 				   ImageIO.write(img, "png", outputfile);  // ignore returned boolean
 				   System.out.println("file stored "+img);

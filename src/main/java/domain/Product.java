@@ -224,7 +224,16 @@ public class Product implements Serializable {
 		this.seller = seller;
 	}
 
-
+	/**
+	 * Get the file of a product
+	 * 
+	 * @return the associated file
+	 */
+	public String getFile() {
+		return file;
+	}
+	
+	
 	public String toString(){
 		return productNumber+";"+";"+title+";"+price;  
 	}
