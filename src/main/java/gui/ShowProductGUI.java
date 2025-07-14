@@ -44,8 +44,8 @@ public class ShowProductGUI extends JFrame {
 	private JLabel jLabelError = new JLabel();
 	private JFrame thisFrame;
 
-	public ShowProductGUI(Product p) {
-		thisFrame=this;
+	public ShowProductGUI(Product p) { 
+		thisFrame=this; 
 		this.setVisible(true);
 		this.getContentPane().setLayout(null);
 		this.setSize(new Dimension(604, 370));
