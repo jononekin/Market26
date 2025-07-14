@@ -1,11 +1,13 @@
 package gui;
 
 import businessLogic.BLFacade;
+import configuration.UtilDate;
 import domain.Product;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
@@ -29,7 +31,9 @@ public class FindProductGUI extends JFrame {
 
 	private String[] columnNamesProducts = new String[] {
 			ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Title"), 
-			ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Price")
+			ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Price"),
+			ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.PublicationDate"),
+
 	};
 	private JTextField jTextFieldSearch;
 
@@ -64,12 +68,14 @@ public class FindProductGUI extends JFrame {
 		tableProducts.setModel(tableModelProducts);
 
 		tableModelProducts.setDataVector(null, columnNamesProducts);
-		tableModelProducts.setColumnCount(3); // another column added to allocate ride objects
+		tableModelProducts.setColumnCount(4); // another column added to allocate ride objects
 
-		tableProducts.getColumnModel().getColumn(0).setPreferredWidth(170);
-		tableProducts.getColumnModel().getColumn(1).setPreferredWidth(30);
+		tableProducts.getColumnModel().getColumn(0).setPreferredWidth(200);
+		tableProducts.getColumnModel().getColumn(1).setPreferredWidth(10);
+		tableProducts.getColumnModel().getColumn(1).setPreferredWidth(70);
 
-		tableProducts.getColumnModel().removeColumn(tableProducts.getColumnModel().getColumn(2)); // not shown in JTable
+
+		tableProducts.getColumnModel().removeColumn(tableProducts.getColumnModel().getColumn(3)); // not shown in JTable
 
 		this.getContentPane().add(scrollPanelProducts, null);
 		
@@ -83,16 +89,20 @@ public class FindProductGUI extends JFrame {
 		 	public void actionPerformed(ActionEvent e) {
 		 		try {
 					tableModelProducts.setDataVector(null, columnNamesProducts);
-					tableModelProducts.setColumnCount(3); // another column added to allocate product object
+					tableModelProducts.setColumnCount(4); // another column added to allocate product object
 
 					BLFacade facade = MainGUI.getBusinessLogic();
-					List<domain.Product> products=facade.getProducts(jTextFieldSearch.getText());
+					Date today = UtilDate.trim(new Date());
+
+					List<domain.Product> products=facade.getPublishedProducts(jTextFieldSearch.getText(),today);
+
 					if (products.isEmpty() ) jLabelProducts.setText(ResourceBundle.getBundle("Etiquetas").getString("FindProductsGUI.NoProducts"));
 					else jLabelProducts.setText(ResourceBundle.getBundle("Etiquetas").getString("FindProductsGUI.Products"));
 					for (domain.Product product:products){
 						Vector<Object> row = new Vector<Object>();
 						row.add(product.getTitle());
 						row.add(product.getPrice());
+						row.add(new SimpleDateFormat("dd-MM-yyyy").format(product.getPublicationDate()));
 						row.add(product); // product object added in order to obtain it with tableModelProducts.getValueAt(i,2)
 						tableModelProducts.addRow(row);		
 					}
@@ -100,9 +110,11 @@ public class FindProductGUI extends JFrame {
 
 					e1.printStackTrace();
 				}
-				tableProducts.getColumnModel().getColumn(0).setPreferredWidth(170);
-				tableProducts.getColumnModel().getColumn(1).setPreferredWidth(30);
-				tableProducts.getColumnModel().removeColumn(tableProducts.getColumnModel().getColumn(2)); // not shown in JTable
+				tableProducts.getColumnModel().getColumn(0).setPreferredWidth(200);
+				tableProducts.getColumnModel().getColumn(1).setPreferredWidth(10);
+				tableProducts.getColumnModel().getColumn(1).setPreferredWidth(70);
+
+				tableProducts.getColumnModel().removeColumn(tableProducts.getColumnModel().getColumn(3)); // not shown in JTable
 		 		
 		 	}
 		 });
@@ -114,9 +126,7 @@ public class FindProductGUI extends JFrame {
 		        JTable table =(JTable) mouseEvent.getSource();
 		        Point point = mouseEvent.getPoint();
 		        int row = table.rowAtPoint(point);
-		        System.out.println("row "+row);
-	            Product p=(Product) tableModelProducts.getValueAt(row, 2);
-	            System.out.println("Product "+p);
+	            Product p=(Product) tableModelProducts.getValueAt(row, 3);
 	            new ShowProductGUI(p);
 	            
 		        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1 && row != -1) {
@@ -129,7 +139,6 @@ public class FindProductGUI extends JFrame {
 		            // this line takes care of that
 		            int modelRow = table.convertRowIndexToModel(row);
 		            
-		            System.out.println("Product "+p);
 
 		            // your valueChanged overridden method
 		        }

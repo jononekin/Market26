@@ -20,6 +20,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import businessLogic.BLFacade;
+import configuration.UtilDate;
 import domain.Product;
 
 
@@ -93,7 +94,7 @@ public class CreateProductGUI extends JFrame {
 						float price = Float.parseFloat(jTextFieldPrice.getText());
 						String s=(String)jComboBoxStatus.getSelectedItem();
 						int numStatus=status.indexOf(s);
-						facade.createProduct(fieldTitle.getText(), fieldDescription.getText(), price, numStatus, sellerMail, targetFile);
+						facade.createProduct(fieldTitle.getText(), fieldDescription.getText(), price, numStatus, UtilDate.trim(jCalendar.getDate()), sellerMail, targetFile);
 						jLabelMsg.setText(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.ProductCreated"));
 					
 					} catch (Exception e1) {

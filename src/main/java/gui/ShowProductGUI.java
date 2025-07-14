@@ -1,17 +1,13 @@
 package gui;
 
 import java.util.*;
-import java.util.List;
-import java.util.logging.Logger;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.awt.image.BufferedImage;
 
 import businessLogic.BLFacade;
@@ -33,15 +29,13 @@ public class ShowProductGUI extends JFrame {
 	
 	JLabel labelStatus = new JLabel(); 
 
-	
-	private JLabel jLabelTitle = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Title"));
+	private JLabel jLabelTitle = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("ShowProductsGUI.Title"));
 	private JLabel jLabelDescription = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Description")); 
 	private JLabel jLabelProductStatus = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Status"));
 	private JLabel jLabelPrice = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Price"));
 	private JTextField fieldPrice = new JTextField();
 	private File selectedFile;
     private String irudia;
-
 
 	private JScrollPane scrollPaneEvents = new JScrollPane();
 	DefaultComboBoxModel<String> statusOptions = new DefaultComboBoxModel<String>();
@@ -51,7 +45,6 @@ public class ShowProductGUI extends JFrame {
 	private JFrame thisFrame;
 
 	public ShowProductGUI(Product p) {
-
 		thisFrame=this;
 		this.setVisible(true);
 		this.getContentPane().setLayout(null);
@@ -61,11 +54,9 @@ public class ShowProductGUI extends JFrame {
 		fieldTitle.setText(p.getTitle());
 		fieldDescription.setText(p.getDescription());
 
-		fieldPrice.setText(Float.toString(p.getPrice()));
-		labelStatus.setText(getStatus().get(p.getStatus()));
+		fieldPrice.setText(Float.toString(p.getPrice()));		
 		
-		
-		
+		labelStatus.setText(new SimpleDateFormat("dd-MM-yyyy").format(p.getPublicationDate()));
 		
 		jLabelTitle.setBounds(new Rectangle(6, 56, 92, 20));
 		
@@ -122,7 +113,7 @@ public class ShowProductGUI extends JFrame {
 		getContentPane().add(panel_1);
 		
 		labelStatus.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-		labelStatus.setBounds(137, 198, 101, 16);
+		labelStatus.setBounds(37, 231, 289, 16);
 		getContentPane().add(labelStatus);
 		
 		
@@ -144,7 +135,6 @@ public class ShowProductGUI extends JFrame {
         g.dispose();
         return resizedImage;
     }
-	
 	
 	private ArrayList<String> getStatus() {
 		String lang=Locale.getDefault().toString();

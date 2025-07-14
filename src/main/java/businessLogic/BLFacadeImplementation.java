@@ -1,5 +1,6 @@
 package businessLogic;
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import javax.jws.WebMethod;
@@ -39,9 +40,9 @@ public class BLFacadeImplementation  implements BLFacade {
 	 * {@inheritDoc}
 	 */
    @WebMethod
-	public Product createProduct(String title, String description, float price, int status, String sellerEmail, File file) throws  ProductAlreadyExistException {
+	public Product createProduct(String title, String description, float price, int status, Date pubDate, String sellerEmail, File file) throws  ProductAlreadyExistException {
 		dbManager.open();
-		Product product=dbManager.createProduct(title, description, price, status, sellerEmail, file);		
+		Product product=dbManager.createProduct(title, description, price, status, pubDate, sellerEmail, file);		
 		dbManager.close();
 		return product;
    };
@@ -56,6 +57,17 @@ public class BLFacadeImplementation  implements BLFacade {
 		dbManager.close();
 		return rides;
 	}
+	
+	/**
+	    * {@inheritDoc}
+	    */
+		@WebMethod 
+		public List<Product> getPublishedProducts(String desc, Date pubDate) {
+			dbManager.open();
+			List<Product>  rides=dbManager.getPublishedProducts(desc,pubDate);
+			dbManager.close();
+			return rides;
+		}
 	/**
 	    * {@inheritDoc}
 	    */

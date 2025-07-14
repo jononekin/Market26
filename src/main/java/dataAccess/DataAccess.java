@@ -124,7 +124,7 @@ public class DataAccess  {
 	 * @return Product
  	 * @throws ProductAlreadyExistException if the same product already exists for the seller
 	 */
-	public Product createProduct(String title, String description,  float price, int status,  String sellerEmail, File file) throws  ProductAlreadyExistException {
+	public Product createProduct(String title, String description,  float price, int status,  Date pubDate, String sellerEmail, File file) throws  ProductAlreadyExistException {
 		System.out.println(">> DataAccess: createProduct=> title= "+title+" seller="+sellerEmail);
 		try {
 			
@@ -135,9 +135,8 @@ public class DataAccess  {
 				db.getTransaction().commit();
 				throw new ProductAlreadyExistException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.ProductAlreadyExist"));
 			}
-			Date today = UtilDate.trim(new Date());
 
-			Product product = seller.addProduct(title, description, price, status, today, file.getName());
+			Product product = seller.addProduct(title, description, price, status, pubDate, file.getName());
 			//next instruction can be obviated
 			db.persist(seller); 
 			db.getTransaction().commit();
@@ -168,7 +167,7 @@ public class DataAccess  {
 	}
 	
 	/**
-	 * This method retrieves the products that contain a desc text in a title
+	 * This method retrieves all the products that contain a desc text in a title
 	 * 
 	 * @param desc the text to search
 	 * @return collection of products that contain desc in a title
@@ -187,7 +186,26 @@ public class DataAccess  {
 	 	return res;
 	}
 	
-	
+	/**
+	 * This method retrieves the products that contain a desc text in a title and the publicationDate today or before
+	 * 
+	 * @param desc the text to search
+	 * @return collection of products that contain desc in a title
+	 */
+	public List<Product> getPublishedProducts(String desc, Date pubDate) {
+		System.out.println(">> DataAccess: getProducts=> from= "+desc);
+
+		List<Product> res = new ArrayList<Product>();	
+		TypedQuery<Product> query = db.createQuery("SELECT p FROM Product p WHERE p.title LIKE ?1 AND p.publicationDate <=?2",Product.class);   
+		query.setParameter(1, "%"+desc+"%");
+		query.setParameter(2,pubDate);
+		
+		List<Product> products = query.getResultList();
+	 	 for (Product product:products){
+		   res.add(product);
+		  }
+	 	return res;
+	}
 
 public void open(){
 		

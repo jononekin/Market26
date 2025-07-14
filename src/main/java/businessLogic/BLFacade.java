@@ -1,6 +1,7 @@
 package businessLogic;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import domain.Product;
@@ -31,7 +32,7 @@ public interface BLFacade  {
 	 * @return Product
 	 */
    @WebMethod
-	public Product createProduct(String title, String description, float price, int status, String sellerEmail, File file) throws  ProductAlreadyExistException;
+	public Product createProduct(String title, String description, float price, int status, Date pubDate, String sellerEmail, File file) throws  ProductAlreadyExistException;
 	
 	
 	/**
@@ -41,6 +42,16 @@ public interface BLFacade  {
 	 * @return collection of products that contain desc 
 	 */
 	@WebMethod public List<Product> getProducts(String desc);
+	
+	/**
+	 * 	 * This method retrieves the products that contain a desc text in a title and the publicationDate today or before
+	 * 
+	 * @param desc the text to search
+	 * @param pubDate the date  of the publication date
+	 * @return collection of products that contain desc and published before pubDate
+	 */
+	@WebMethod public List<Product> getPublishedProducts(String desc, Date pubDate);
+
 	
 	/**
 	 * This method calls the data access to initialize the database with some sellers and products.
