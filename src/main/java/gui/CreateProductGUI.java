@@ -8,11 +8,16 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.toedter.calendar.JCalendar;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import businessLogic.BLFacade;
 import domain.Product;
@@ -39,6 +44,9 @@ public class CreateProductGUI extends JFrame {
 	private JLabel jLabelPrice = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Price"));
 	private JTextField jTextFieldPrice = new JTextField();
 
+	private JCalendar jCalendar = new JCalendar();
+	private Calendar calendarAct = null;
+	private Calendar calendarAnt = null;
 
 	private JScrollPane scrollPaneEvents = new JScrollPane();
 	
@@ -63,15 +71,15 @@ public class CreateProductGUI extends JFrame {
 		this.setSize(new Dimension(604, 370));
 		this.setTitle(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.CreateProduct"));
 
-		jLabelTitle.setBounds(new Rectangle(6, 56, 92, 20));
+		jLabelTitle.setBounds(new Rectangle(6, 24, 92, 20));
 		
-		jLabelPrice.setBounds(new Rectangle(6, 166, 101, 20));
-		jTextFieldPrice.setBounds(new Rectangle(137, 166, 60, 20));
+		jLabelPrice.setBounds(new Rectangle(6, 141, 101, 20));
+		jTextFieldPrice.setBounds(new Rectangle(97, 141, 60, 20));
 
 		
 		scrollPaneEvents.setBounds(new Rectangle(25, 44, 346, 116));
 
-		jButtonCreate.setBounds(new Rectangle(100, 263, 130, 30));
+		jButtonCreate.setBounds(new Rectangle(6, 202, 130, 30));
 
 		jButtonCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -95,7 +103,7 @@ public class CreateProductGUI extends JFrame {
 					}
 			}
 		});
-		jButtonClose.setBounds(new Rectangle(275, 263, 130, 30));
+		jButtonClose.setBounds(new Rectangle(148, 202, 130, 30));
 		jButtonClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				thisFrame.setVisible(false);			}
@@ -122,24 +130,24 @@ public class CreateProductGUI extends JFrame {
 		this.getContentPane().add(jTextFieldPrice, null);
 		
 		jLabelProductStatus.setBounds(new Rectangle(40, 15, 140, 25));
-		jLabelProductStatus.setBounds(6, 187, 140, 25);
+		jLabelProductStatus.setBounds(6, 165, 140, 25);
 		getContentPane().add(jLabelProductStatus);
 		
-		jLabelDescription.setBounds(6, 81, 109, 16);
+		jLabelDescription.setBounds(6, 56, 109, 16);
 		getContentPane().add(jLabelDescription);
 		
 		
-		fieldTitle.setBounds(128, 53, 370, 26);
+		fieldTitle.setBounds(98, 21, 250, 26);
 		getContentPane().add(fieldTitle);
 		fieldTitle.setColumns(10);
 		
 		
-		fieldDescription.setBounds(127, 81, 371, 73);
+		fieldDescription.setBounds(98, 56, 250, 73);
 		getContentPane().add(fieldDescription);
 		fieldDescription.setColumns(10);
 		
 		jComboBoxStatus.setModel(statusOptions);
-		jComboBoxStatus.setBounds(132, 192, 114, 27);
+		jComboBoxStatus.setBounds(89, 165, 114, 27);
 		getContentPane().add(jComboBoxStatus);
 		
 		JButton btnNewButton = new JButton(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.LoadPicture")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -170,11 +178,11 @@ public class CreateProductGUI extends JFrame {
 		            }
 			}
 		});
-		btnNewButton.setBounds(275, 186, 117, 29);
+		btnNewButton.setBounds(186, 138, 117, 29);
 		getContentPane().add(btnNewButton);
 		
 		panel_1 = new JPanel();
-		panel_1.setBounds(440, 192, 124, 86);
+		panel_1.setBounds(285, 209, 124, 86);
 		getContentPane().add(panel_1);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -208,9 +216,50 @@ public class CreateProductGUI extends JFrame {
 				
 			}
 		});
-		btnNewButton_2.setBounds(137, 307, 117, 29);
+		btnNewButton_2.setBounds(137, 350, 117, 29);
 		
 		getContentPane().add(btnNewButton_2);
+		
+		jCalendar.setBounds(new Rectangle(360, 50, 225, 150));
+		this.getContentPane().add(jCalendar, null);
+		
+		JLabel jLabelPublicationDate = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.PublicationDate"));
+		jLabelPublicationDate.setBounds(new Rectangle(6, 24, 92, 20));
+		jLabelPublicationDate.setBounds(360, 26, 197, 20);
+		getContentPane().add(jLabelPublicationDate);
+
+		this.jCalendar.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent propertychangeevent) {
+//			
+				if (propertychangeevent.getPropertyName().equals("locale")) {
+					jCalendar.setLocale((Locale) propertychangeevent.getNewValue());
+				} else if (propertychangeevent.getPropertyName().equals("calendar")) {
+					calendarAnt = (Calendar) propertychangeevent.getOldValue();
+					calendarAct = (Calendar) propertychangeevent.getNewValue();
+					DateFormat dateformat1 = DateFormat.getDateInstance(1, jCalendar.getLocale());
+					
+					int monthAnt = calendarAnt.get(Calendar.MONTH);
+					int monthAct = calendarAct.get(Calendar.MONTH);
+					if (monthAct!=monthAnt) {
+						if (monthAct==monthAnt+2) { 
+							// Si en JCalendar está 30 de enero y se avanza al mes siguiente, devolverá 2 de marzo (se toma como equivalente a 30 de febrero)
+							// Con este código se dejará como 1 de febrero en el JCalendar
+							calendarAct.set(Calendar.MONTH, monthAnt+1);
+							calendarAct.set(Calendar.DAY_OF_MONTH, 1);
+						}
+						
+						jCalendar.setCalendar(calendarAct);						
+	
+					}
+					jCalendar.setCalendar(calendarAct);
+					int offset = jCalendar.getCalendar().get(Calendar.DAY_OF_WEEK);
+					
+						if (Locale.getDefault().equals(new Locale("es")))
+							offset += 4;
+						else
+							offset += 5;
+				Component o = (Component) jCalendar.getDayChooser().getDayPanel().getComponent(jCalendar.getCalendar().get(Calendar.DAY_OF_MONTH) + offset);
+				}}});
 		
 	}	 
 
