@@ -11,10 +11,10 @@ import java.text.SimpleDateFormat;
 import java.awt.image.BufferedImage;
 
 import businessLogic.BLFacade;
-import domain.Product;
+import domain.Sale;
 
 
-public class ShowProductGUI extends JFrame {
+public class ShowSaleGUI extends JFrame {
 	
     File targetFile;
     BufferedImage targetImg;
@@ -29,10 +29,10 @@ public class ShowProductGUI extends JFrame {
 	
 	JLabel labelStatus = new JLabel(); 
 
-	private JLabel jLabelTitle = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("ShowProductsGUI.Title"));
-	private JLabel jLabelDescription = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Description")); 
-	private JLabel jLabelProductStatus = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Status"));
-	private JLabel jLabelPrice = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Price"));
+	private JLabel jLabelTitle = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("ShowSaleGUI.Title"));
+	private JLabel jLabelDescription = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateSaleGUI.Description")); 
+	private JLabel jLabelProductStatus = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateSaleGUI.Status"));
+	private JLabel jLabelPrice = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateSaleGUI.Price"));
 	private JTextField fieldPrice = new JTextField();
 	private File selectedFile;
     private String irudia;
@@ -43,20 +43,20 @@ public class ShowProductGUI extends JFrame {
 	private JLabel jLabelMsg = new JLabel();
 	private JLabel jLabelError = new JLabel();
 	private JFrame thisFrame;
-
-	public ShowProductGUI(Product p) { 
+	
+	public ShowSaleGUI(Sale sale) { 
 		thisFrame=this; 
 		this.setVisible(true);
 		this.getContentPane().setLayout(null);
 		this.setSize(new Dimension(604, 370));
-		this.setTitle(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.CreateProduct"));
+		//this.setTitle(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.CreateProduct"));
 
-		fieldTitle.setText(p.getTitle());
-		fieldDescription.setText(p.getDescription());
+		fieldTitle.setText(sale.getTitle());
+		fieldDescription.setText(sale.getDescription());
 
-		fieldPrice.setText(Float.toString(p.getPrice()));		
+		fieldPrice.setText(Float.toString(sale.getPrice()));		
 		
-		labelStatus.setText(new SimpleDateFormat("dd-MM-yyyy").format(p.getPublicationDate()));
+		labelStatus.setText(new SimpleDateFormat("dd-MM-yyyy").format(sale.getPublicationDate()));
 		
 		jLabelTitle.setBounds(new Rectangle(6, 56, 92, 20));
 		
@@ -119,7 +119,7 @@ public class ShowProductGUI extends JFrame {
 		
 		BLFacade facade = MainGUI.getBusinessLogic();
 		
-		Image img=facade.downloadImage(p.getFile());
+		Image img=facade.downloadImage(sale.getFile());
 		targetImg = rescale((BufferedImage)img);
 		
 		panel_1.setLayout(new BorderLayout(0, 0));

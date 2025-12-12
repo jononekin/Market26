@@ -23,19 +23,17 @@ public class Seller implements Serializable {
 	@Id 
 	private String email;
 	private String name; 
-	private String city;
 	@XmlIDREF
 	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
-	private List<Product> products=new ArrayList<Product>();
+	private List<Sale> sales=new ArrayList<Sale>();
 
 	public Seller() {
 		super();
 	}
 
-	public Seller(String email, String name, String city) {
+	public Seller(String email, String name) {
 		this.email = email;
 		this.name = name;
-		this.city=city;
 	}
 	
 	
@@ -55,18 +53,11 @@ public class Seller implements Serializable {
 		this.name = name;
 	}
 	
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
 
 	
 	
 	public String toString(){
-		return email+";"+name+products;
+		return email+";"+name+sales;
 	}
 	
 	/**
@@ -76,21 +67,15 @@ public class Seller implements Serializable {
 	 * @param description of the product
 	 * @param status 
 	 * @param selling price
-	 * @param category of a product
 	 * @param publicationDate
 	 * @return Product
 	 */
-	public Product addProduct(String title, String description,  float price, int status, Date publicationDate, String file)  {
+	
 
-        Product product=new Product(title,description, price, status, "general", publicationDate, file, this);
-        products.add(product);
-        return product;
-	}
+	public Sale addSale(String title, String description,  float price, int status,  Date publicationDate, String file)  {
 
-	public Product addProduct(String title, String description,  float price, int status, String category, Date publicationDate, String file)  {
-
-        Product product=new Product(title,description, price, status, category, publicationDate, file, this);
-        products.add(product);
+		Sale product=new Sale(title,description, price, status,  publicationDate, file, this);
+        sales.add(product);
         return product;
 	}
 	/**
@@ -101,9 +86,9 @@ public class Seller implements Serializable {
 	 * @param date the date of the ride 
 	 * @return true if the ride exists and false in other case
 	 */
-	public boolean doesProductExist(String title)  {	
-		for (Product r:products)
-			if ( r.getTitle().compareTo(title)==0 )
+	public boolean doesSaleExist(String title)  {	
+		for (Sale s:sales)
+			if ( s.getTitle().compareTo(title)==0 )
 			 return true;
 		return false;
 	}

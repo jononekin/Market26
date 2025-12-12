@@ -20,8 +20,10 @@ import javax.persistence.TypedQuery;
 import configuration.ConfigXML;
 import configuration.UtilDate;
 import domain.Seller;
-import domain.Product;
-import exceptions.ProductAlreadyExistException;
+import domain.Sale;
+import exceptions.FileNotUploadedException;
+import exceptions.MustBeLaterThanTodayException;
+import exceptions.SaleAlreadyExistException;
 
 /**
  * It implements the data access to the objectDb database
@@ -76,26 +78,26 @@ public class DataAccess  {
 		try { 
 	       
 		    //Create sellers 
-			Seller seller1=new Seller("seller1@gmail.com","Aitor Fernandez","Ataun");
-			Seller seller2=new Seller("seller22@gmail.com","Ane Gaztañaga","Orio");
-			Seller seller3=new Seller("seller3@gmail.com","Test Seller","Gernika");
+			Seller seller1=new Seller("seller1@gmail.com","Aitor Fernandez");
+			Seller seller2=new Seller("seller22@gmail.com","Ane Gaztañaga");
+			Seller seller3=new Seller("seller3@gmail.com","Test Seller");
 
 			
 			//Create products
 			Date today = UtilDate.trim(new Date());
 		
 			
-			seller1.addProduct("futbol baloia", "oso polita, gutxi erabilita", 10, 2, "kirola", today, null);
-			seller1.addProduct("salomon mendiko botak", "44 zenbakia, 3 ateraldi",20,  2, "kirola", today, null);
-			seller1.addProduct("samsung 42\" telebista", "berria, erabili gabe", 175, 1, "elektronika", today, null);
+			seller1.addSale("futbol baloia", "oso polita, gutxi erabilita", 10, 2,  today, null);
+			seller1.addSale("salomon mendiko botak", "44 zenbakia, 3 ateraldi",20,  2,  today, null);
+			seller1.addSale("samsung 42\" telebista", "berria, erabili gabe", 175, 1,  today, null);
 
 
-			seller2.addProduct("imac 27", "7 urte, dena ondo dabil", 1, 200,  "elektronika",today, null);
-			seller2.addProduct("iphone 17", "oso gutxi erabilita", 2, 400, "elektronika", today, null);
-			seller2.addProduct("orbea mendiko bizikleta", "29\" 10 urte, mantenua behar du", 3,225, "kirola", today, null);
-			seller2.addProduct("polar kilor erlojua", "Vantage M, ondo dago", 3, 30, "kirola", today, null);
+			seller2.addSale("imac 27", "7 urte, dena ondo dabil", 1, 200,today, null);
+			seller2.addSale("iphone 17", "oso gutxi erabilita", 2, 400, today, null);
+			seller2.addSale("orbea mendiko bizikleta", "29\" 10 urte, mantenua behar du", 3,225, today, null);
+			seller2.addSale("polar kilor erlojua", "Vantage M, ondo dago", 3, 30, today, null);
 
-			seller3.addProduct("sukaldeko mahaia", "1.8*0.8, 4 aulkiekin. Prezio finkoa", 3,45, "etxea", today, null);
+			seller3.addSale("sukaldeko mahaia", "1.8*0.8, 4 aulkiekin. Prezio finkoa", 3,45, today, null);
 
 			
 			db.persist(seller1);
@@ -122,24 +124,31 @@ public class DataAccess  {
 	 * @param category of a product
 	 * @param publicationDate
 	 * @return Product
- 	 * @throws ProductAlreadyExistException if the same product already exists for the seller
+ 	 * @throws SaleAlreadyExistException if the same product already exists for the seller
 	 */
-	public Product createProduct(String title, String description,  float price, int status,  Date pubDate, String sellerEmail, File file) throws  ProductAlreadyExistException {
+	public Sale createSale(String title, String description,  float price, int status,  Date pubDate, String sellerEmail, File file) throws  FileNotUploadedException, MustBeLaterThanTodayException, SaleAlreadyExistException {
 		System.out.println(">> DataAccess: createProduct=> title= "+title+" seller="+sellerEmail);
 		try {
-			
+			/*if(new Date().compareTo(pubDate)>=0) {
+				throw new MustBeLaterThanTodayException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.ErrorSaleMustBeLaterThanToday"));
+			}*/
+			if (file==null)
+				throw new FileNotUploadedException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.ErrorFileNotUploadedException"));
+
 			db.getTransaction().begin();
 			
 			Seller seller = db.find(Seller.class, sellerEmail);
-			if (seller.doesProductExist(title)) {
+			if (seller.doesSaleExist(title)) {
 				db.getTransaction().commit();
-				throw new ProductAlreadyExistException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.ProductAlreadyExist"));
+				throw new SaleAlreadyExistException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.SaleAlreadyExist"));
 			}
 
-			Product product = seller.addProduct(title, description, price, status, pubDate, file.getName());
+			Sale sale = seller.addSale(title, description, price, status, pubDate, file.getName());
 			//next instruction can be obviated
+
 			db.persist(seller); 
 			db.getTransaction().commit();
+			 System.out.println("sale stored "+sale+ " "+seller);
 
 			try {
 				BufferedImage img = ImageIO.read(file);
@@ -155,7 +164,7 @@ public class DataAccess  {
 
 			   System.out.println("hasta aqui");
 
-			return product;
+			return sale;
 		} catch (NullPointerException e) {
 			   e.printStackTrace();
 			// TODO Auto-generated catch block
@@ -172,16 +181,16 @@ public class DataAccess  {
 	 * @param desc the text to search
 	 * @return collection of products that contain desc in a title
 	 */
-	public List<Product> getProducts(String desc) {
+	public List<Sale> getSales(String desc) {
 		System.out.println(">> DataAccess: getProducts=> from= "+desc);
 
-		List<Product> res = new ArrayList<Product>();	
-		TypedQuery<Product> query = db.createQuery("SELECT p FROM Product p WHERE p.title LIKE ?1",Product.class);   
+		List<Sale> res = new ArrayList<Sale>();	
+		TypedQuery<Sale> query = db.createQuery("SELECT s FROM Sale s WHERE s.title LIKE ?1",Sale.class);   
 		query.setParameter(1, "%"+desc+"%");
 		
-		List<Product> products = query.getResultList();
-	 	 for (Product product:products){
-		   res.add(product);
+		List<Sale> sales = query.getResultList();
+	 	 for (Sale sale:sales){
+		   res.add(sale);
 		  }
 	 	return res;
 	}
@@ -192,17 +201,17 @@ public class DataAccess  {
 	 * @param desc the text to search
 	 * @return collection of products that contain desc in a title
 	 */
-	public List<Product> getPublishedProducts(String desc, Date pubDate) {
+	public List<Sale> getPublishedSales(String desc, Date pubDate) {
 		System.out.println(">> DataAccess: getProducts=> from= "+desc);
 
-		List<Product> res = new ArrayList<Product>();	
-		TypedQuery<Product> query = db.createQuery("SELECT p FROM Product p WHERE p.title LIKE ?1 AND p.publicationDate <=?2",Product.class);   
+		List<Sale> res = new ArrayList<Sale>();	
+		TypedQuery<Sale> query = db.createQuery("SELECT s FROM Sale s WHERE s.title LIKE ?1 AND s.pubDate <=?2",Sale.class);   
 		query.setParameter(1, "%"+desc+"%");
 		query.setParameter(2,pubDate);
 		
-		List<Product> products = query.getResultList();
-	 	 for (Product product:products){
-		   res.add(product);
+		List<Sale> sales = query.getResultList();
+	 	 for (Sale sale:sales){
+		   res.add(sale);
 		  }
 	 	return res;
 	}

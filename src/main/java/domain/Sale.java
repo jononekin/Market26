@@ -13,51 +13,33 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @SuppressWarnings("serial")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
-public class Product implements Serializable {
+public class Sale implements Serializable {
 	@XmlID
 	@Id 
 	@XmlJavaTypeAdapter(IntegerAdapter.class)
 	@GeneratedValue
-	private Integer productNumber;
+	private Integer saleNumber;
 	private String title;
 	private String description;
 	private int  status;
-	private String category;
 	private float price;
-	private Date publicationDate;
+	private Date pubDate;
 	private String file;
 	
 	private Seller seller;  
 	
-	public Product(){
+	public Sale(){
 		super();
 	}
-	
-	public Product(Integer productNumber, String title, String description, float price, int status, String category, Date pubDate, String file, Seller seller) {
-		super();
-		this.productNumber = productNumber;
-		this.title = title;
-		this.description = description;
-		this.status = status;
-		this.category=category;
-		this.price=price;
-		this.publicationDate=pubDate;
-		this.file=file;
-		this.seller = seller;
-
-	}
-
-	
-
-	public Product(String title, String description,  float price,int status, String category, Date pubDate, String file, Seller seller) {
+		
+	public Sale(String title, String description, float price,int status, Date pubDate, String file, Seller seller) {
 		super();
 
 		this.title = title;
 		this.description = description;
 		this.status = status;
-		this.category=category;
 		this.price=price;
-		this.publicationDate=pubDate;
+		this.pubDate=pubDate;
 		this.file=file;
 
 		this.seller = seller;
@@ -68,8 +50,8 @@ public class Product implements Serializable {
 	 * 
 	 * @return the product number
 	 */
-	public Integer getProductNumber() {
-		return productNumber;
+	public Integer getSaleNumber() {
+		return saleNumber;
 	}
 
 	
@@ -78,8 +60,8 @@ public class Product implements Serializable {
 	 * 
 	 * @param product Number to be set	 */
 	
-	public void setProductNumber(Integer productNumber) {
-		this.productNumber = productNumber;
+	public void setSaleNumber(Integer saleNumber) {
+		this.saleNumber = saleNumber;
 	}
 
 
@@ -147,25 +129,6 @@ public class Product implements Serializable {
 		this.status = status;
 	}
 	
-	/**
-	 * Get the category of the product
-	 * 
-	 * @return the category description
-	 */
-
-	public String getCategory() {
-		return category;
-	}
-
-
-	/**
-	 * Set the category of the product
-	 * 
-	 * @param category to be set
-	 */	
-	public void setCategory(String category) {
-		this.category = category;
-	}
 	
 	/**
 	 * Get the price of the product
@@ -194,7 +157,7 @@ public class Product implements Serializable {
 	 * @return the publication date  
 	 */
 	public Date getPublicationDate() {
-		return publicationDate;
+		return pubDate;
 	}
 	/**
 	 * Set the publication date  of the product
@@ -202,7 +165,7 @@ public class Product implements Serializable {
 	 * @param publication date to be set
 	 */	
 	public void setPublicationDate(Date publicationDate) {
-		this.publicationDate = publicationDate;
+		this.pubDate = publicationDate;
 	}
 
 
@@ -235,7 +198,7 @@ public class Product implements Serializable {
 	
 	
 	public String toString(){
-		return productNumber+";"+";"+title+";"+price;  
+		return saleNumber+";"+title+";"+price;  
 	}
 
 

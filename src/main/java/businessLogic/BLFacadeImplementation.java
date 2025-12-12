@@ -7,8 +7,10 @@ import javax.jws.WebMethod;
 import javax.jws.WebService;
 
 import dataAccess.DataAccess;
-import domain.Product;
-import exceptions.ProductAlreadyExistException;
+import domain.Sale;
+import exceptions.FileNotUploadedException;
+import exceptions.MustBeLaterThanTodayException;
+import exceptions.SaleAlreadyExistException;
 import java.awt.image.BufferedImage;
 import java.awt.Image;
 import javax.imageio.ImageIO;
@@ -40,9 +42,9 @@ public class BLFacadeImplementation  implements BLFacade {
 	 * {@inheritDoc}
 	 */
    @WebMethod
-	public Product createProduct(String title, String description, float price, int status, Date pubDate, String sellerEmail, File file) throws  ProductAlreadyExistException {
+	public Sale createSale(String title, String description, float price, int status, Date pubDate, String sellerEmail, File file) throws  FileNotUploadedException, MustBeLaterThanTodayException, SaleAlreadyExistException {
 		dbManager.open();
-		Product product=dbManager.createProduct(title, description, price, status, pubDate, sellerEmail, file);		
+		Sale product=dbManager.createSale(title, description, price, status, pubDate, sellerEmail, file);		
 		dbManager.close();
 		return product;
    };
@@ -51,9 +53,9 @@ public class BLFacadeImplementation  implements BLFacade {
     * {@inheritDoc}
     */
 	@WebMethod 
-	public List<Product> getProducts(String desc){
+	public List<Sale> getSales(String desc){
 		dbManager.open();
-		List<Product>  rides=dbManager.getProducts(desc);
+		List<Sale>  rides=dbManager.getSales(desc);
 		dbManager.close();
 		return rides;
 	}
@@ -62,9 +64,9 @@ public class BLFacadeImplementation  implements BLFacade {
 	    * {@inheritDoc}
 	    */
 		@WebMethod 
-		public List<Product> getPublishedProducts(String desc, Date pubDate) {
+		public List<Sale> getPublishedSales(String desc, Date pubDate) {
 			dbManager.open();
-			List<Product>  rides=dbManager.getPublishedProducts(desc,pubDate);
+			List<Sale>  rides=dbManager.getPublishedSales(desc,pubDate);
 			dbManager.close();
 			return rides;
 		}

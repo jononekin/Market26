@@ -4,8 +4,10 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 
-import domain.Product;
-import exceptions.ProductAlreadyExistException;
+import domain.Sale;
+import exceptions.FileNotUploadedException;
+import exceptions.MustBeLaterThanTodayException;
+import exceptions.SaleAlreadyExistException;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -29,28 +31,28 @@ public interface BLFacade  {
 	 * @param selling price
 	 * @param category of a product
 	 * @param publicationDate
-	 * @return Product
+	 * @return Sale
 	 */
    @WebMethod
-	public Product createProduct(String title, String description, float price, int status, Date pubDate, String sellerEmail, File file) throws  ProductAlreadyExistException;
+	public Sale createSale(String title, String description, float price, int status, Date pubDate, String sellerEmail, File file) throws  FileNotUploadedException, MustBeLaterThanTodayException, SaleAlreadyExistException;
 	
 	
 	/**
 	 * This method retrieves the products that contain desc
 	 * 
 	 * @param desc the text to search
-	 * @return collection of products that contain desc 
+	 * @return collection of sales that contain desc 
 	 */
-	@WebMethod public List<Product> getProducts(String desc);
+	@WebMethod public List<Sale> getSales(String desc);
 	
 	/**
 	 * 	 * This method retrieves the products that contain a desc text in a title and the publicationDate today or before
 	 * 
 	 * @param desc the text to search
 	 * @param pubDate the date  of the publication date
-	 * @return collection of products that contain desc and published before pubDate
+	 * @return collection of sales that contain desc and published before pubDate
 	 */
-	@WebMethod public List<Product> getPublishedProducts(String desc, Date pubDate);
+	@WebMethod public List<Sale> getPublishedSales(String desc, Date pubDate);
 
 	
 	/**

@@ -21,10 +21,10 @@ import java.beans.PropertyChangeListener;
 
 import businessLogic.BLFacade;
 import configuration.UtilDate;
-import domain.Product;
+import domain.Sale;
 
 
-public class CreateProductGUI extends JFrame {
+public class CreateSaleGUI extends JFrame {
 	
     File targetFile;
     BufferedImage targetImg;
@@ -39,10 +39,10 @@ public class CreateProductGUI extends JFrame {
 	private JTextField fieldTitle=new JTextField();
 	private JTextField fieldDescription=new JTextField();
 	
-	private JLabel jLabelTitle = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Title"));
-	private JLabel jLabelDescription = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Description")); 
-	private JLabel jLabelProductStatus = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Status"));
-	private JLabel jLabelPrice = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.Price"));
+	private JLabel jLabelTitle = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateSaleGUI.Title"));
+	private JLabel jLabelDescription = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateSaleGUI.Description")); 
+	private JLabel jLabelProductStatus = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateSaleGUI.Status"));
+	private JLabel jLabelPrice = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateSaleGUI.Price"));
 	private JTextField jTextFieldPrice = new JTextField();
 
 	private JCalendar jCalendar = new JCalendar();
@@ -56,7 +56,7 @@ public class CreateProductGUI extends JFrame {
 	List<String> status;
 
 
-	private JButton jButtonCreate = new JButton(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.CreateProduct"));
+	private JButton jButtonCreate = new JButton(ResourceBundle.getBundle("Etiquetas").getString("CreateSaleGUI.CreateProduct"));
 	private JButton jButtonClose = new JButton(ResourceBundle.getBundle("Etiquetas").getString("Close"));
 	private JLabel jLabelMsg = new JLabel();
 	private JLabel jLabelError = new JLabel();
@@ -64,13 +64,13 @@ public class CreateProductGUI extends JFrame {
 	private final JButton btnNewButton_1 = new JButton("Mostrar imagen"); //$NON-NLS-1$ //$NON-NLS-2$
 	private final JButton btnNewButton_2 = new JButton("grabar Imagen"); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public CreateProductGUI(String mail) {
+	public CreateSaleGUI(String mail) {
 
 		thisFrame=this;
 		this.sellerMail=mail;
 		this.getContentPane().setLayout(null);
 		this.setSize(new Dimension(604, 370));
-		this.setTitle(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.CreateProduct"));
+		this.setTitle(ResourceBundle.getBundle("Etiquetas").getString("CreateSaleGUI.CreateProduct"));
 
 		jLabelTitle.setBounds(new Rectangle(6, 24, 92, 20));
 		
@@ -79,13 +79,14 @@ public class CreateProductGUI extends JFrame {
 
 		
 		scrollPaneEvents.setBounds(new Rectangle(25, 44, 346, 116));
+		jButtonCreate.setFont(new Font("Lucida Grande", Font.BOLD, 15));
 
-		jButtonCreate.setBounds(new Rectangle(6, 202, 130, 30));
+		jButtonCreate.setBounds(new Rectangle(100, 222, 216, 41));
 
 		jButtonCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				jLabelMsg.setText("");
-				String error=field_Errors();
+				String error=check_fields_Errors();
 				if (error!=null) 
 					jLabelMsg.setText(error);
 				else
@@ -94,8 +95,8 @@ public class CreateProductGUI extends JFrame {
 						float price = Float.parseFloat(jTextFieldPrice.getText());
 						String s=(String)jComboBoxStatus.getSelectedItem();
 						int numStatus=status.indexOf(s);
-						facade.createProduct(fieldTitle.getText(), fieldDescription.getText(), price, numStatus, UtilDate.trim(jCalendar.getDate()), sellerMail, targetFile);
-						jLabelMsg.setText(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.ProductCreated"));
+						facade.createSale(fieldTitle.getText(), fieldDescription.getText(), price, numStatus, UtilDate.trim(jCalendar.getDate()), sellerMail, targetFile);
+						jLabelMsg.setText(ResourceBundle.getBundle("Etiquetas").getString("CreateSaleGUI.ProductCreated"));
 					
 					} catch (Exception e1) {
 
@@ -104,16 +105,16 @@ public class CreateProductGUI extends JFrame {
 					}
 			}
 		});
-		jButtonClose.setBounds(new Rectangle(148, 202, 130, 30));
+		jButtonClose.setBounds(new Rectangle(456, 306, 101, 30));
 		jButtonClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				thisFrame.setVisible(false);			}
 		});
 
-		jLabelMsg.setBounds(new Rectangle(275, 214, 305, 20));
+		jLabelMsg.setBounds(new Rectangle(26, 275, 377, 20));
 		jLabelMsg.setForeground(Color.red);
 
-		jLabelError.setBounds(new Rectangle(6, 231, 320, 20));
+		jLabelError.setBounds(new Rectangle(16, 275, 384, 20));
 		jLabelError.setForeground(Color.red);
 		
 	    status=getStatus();
@@ -131,7 +132,7 @@ public class CreateProductGUI extends JFrame {
 		this.getContentPane().add(jTextFieldPrice, null);
 		
 		jLabelProductStatus.setBounds(new Rectangle(40, 15, 140, 25));
-		jLabelProductStatus.setBounds(6, 165, 140, 25);
+		jLabelProductStatus.setBounds(6, 185, 140, 25);
 		getContentPane().add(jLabelProductStatus);
 		
 		jLabelDescription.setBounds(6, 56, 109, 16);
@@ -148,10 +149,10 @@ public class CreateProductGUI extends JFrame {
 		fieldDescription.setColumns(10);
 		
 		jComboBoxStatus.setModel(statusOptions);
-		jComboBoxStatus.setBounds(89, 165, 114, 27);
+		jComboBoxStatus.setBounds(90, 183, 114, 27);
 		getContentPane().add(jComboBoxStatus);
 		
-		JButton btnNewButton = new JButton(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.LoadPicture")); //$NON-NLS-1$ //$NON-NLS-2$
+		JButton btnNewButton = new JButton(ResourceBundle.getBundle("Etiquetas").getString("CreateSaleGUI.LoadPicture")); //$NON-NLS-1$ //$NON-NLS-2$
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fileChooser = new JFileChooser();
@@ -179,11 +180,11 @@ public class CreateProductGUI extends JFrame {
 		            }
 			}
 		});
-		btnNewButton.setBounds(186, 138, 117, 29);
+		btnNewButton.setBounds(186, 138, 162, 29);
 		getContentPane().add(btnNewButton);
 		
 		panel_1 = new JPanel();
-		panel_1.setBounds(285, 209, 124, 86);
+		panel_1.setBounds(461, 209, 124, 86);
 		getContentPane().add(panel_1);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -198,7 +199,7 @@ public class CreateProductGUI extends JFrame {
                         }
 			}}}
 		});
-		btnNewButton_1.setBounds(393, 307, 164, 29);
+		btnNewButton_1.setBounds(241, 307, 164, 29);
 		
 		getContentPane().add(btnNewButton_1);
 		btnNewButton_2.addActionListener(new ActionListener() {
@@ -224,7 +225,7 @@ public class CreateProductGUI extends JFrame {
 		jCalendar.setBounds(new Rectangle(360, 50, 225, 150));
 		this.getContentPane().add(jCalendar, null);
 		
-		JLabel jLabelPublicationDate = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.PublicationDate"));
+		JLabel jLabelPublicationDate = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("CreateSaleGUI.PublicationDate"));
 		jLabelPublicationDate.setBounds(new Rectangle(6, 24, 92, 20));
 		jLabelPublicationDate.setBounds(360, 26, 197, 20);
 		getContentPane().add(jLabelPublicationDate);
@@ -272,24 +273,24 @@ public class CreateProductGUI extends JFrame {
         g.dispose();
         return resizedImage;
     }
-	private String field_Errors() {
+	private String check_fields_Errors() {
 		
 		try {
 			if ((fieldTitle.getText().length()==0) || (fieldDescription.getText().length()==0)  || (jTextFieldPrice.getText().length()==0))
-				return ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.ErrorQuery");
+				return ResourceBundle.getBundle("Etiquetas").getString("CreateSaleGUI.ErrorQuery");
 			else {
 
 				// trigger an exception if the introduced string is not a number
 					float price = Float.parseFloat(jTextFieldPrice.getText());
 					if (price <= 0) 
-						return ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.PriceMustBeGreaterThan0");
+						return ResourceBundle.getBundle("Etiquetas").getString("CreateSaleGUI.PriceMustBeGreaterThan0");
 					
 					else 
 						return null;
 			}
 		} catch (java.lang.NumberFormatException e1) {
 
-			return  ResourceBundle.getBundle("Etiquetas").getString("CreateProductGUI.ErrorNumber");		
+			return  ResourceBundle.getBundle("Etiquetas").getString("CreateSaleGUI.ErrorNumber");		
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			return null;
