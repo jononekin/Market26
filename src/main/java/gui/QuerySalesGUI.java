@@ -37,9 +37,6 @@ public class QuerySalesGUI extends JFrame {
 	};
 	private JTextField jTextFieldSearch;
 	
-	private boolean state=false;
-	private long first_pressed;
-
 
 	public QuerySalesGUI() {
 		tableProducts.setEnabled(false);

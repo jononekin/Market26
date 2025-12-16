@@ -46,9 +46,9 @@ public class Sale implements Serializable {
 	}
 	
 	/**
-	 * Get the number of the product
+	 * Get the number of the sale
 	 * 
-	 * @return the product number
+	 * @return the sale number
 	 */
 	public Integer getSaleNumber() {
 		return saleNumber;
@@ -56,9 +56,9 @@ public class Sale implements Serializable {
 
 	
 	/**
-	 * Set a number to a product
+	 * Set a number to a sale
 	 * 
-	 * @param product Number to be set	 */
+	 * @param sale Number to be set	 */
 	
 	public void setSaleNumber(Integer saleNumber) {
 		this.saleNumber = saleNumber;
@@ -66,7 +66,7 @@ public class Sale implements Serializable {
 
 
 	/**
-	 * Get the title  of the product
+	 * Get the title  of the sale
 	 * 
 	 * @return the title
 	 */
@@ -77,7 +77,7 @@ public class Sale implements Serializable {
 
 
 	/**
-	 * Set the title of the product
+	 * Set the title of the sale
 	 * 
 	 * @param title to be set
 	 */	
@@ -87,9 +87,9 @@ public class Sale implements Serializable {
 	}
 
 	/**
-	 * Get the description of the product
+	 * Get the description of the sale
 	 * 
-	 * @return the product description
+	 * @return the sale description
 	 */
 
 	public String getDescription() {
@@ -98,7 +98,7 @@ public class Sale implements Serializable {
 
 
 	/**
-	 * Set the description of the product
+	 * Set the description of the sale
 	 * 
 	 * @param description to be set
 	 */	
@@ -109,9 +109,9 @@ public class Sale implements Serializable {
 	
 	
 	/**
-	 * Get the status of the product
+	 * Get the status of the sale
 	 * 
-	 * @return the product status
+	 * @return the sale status
 	 */
 
 	
@@ -121,7 +121,7 @@ public class Sale implements Serializable {
 
 
 	/**
-	 * Set the status of the product
+	 * Set the status of the sale
 	 * 
 	 * @param status to be set
 	 */	
@@ -131,7 +131,7 @@ public class Sale implements Serializable {
 	
 	
 	/**
-	 * Get the price of the product
+	 * Get the price of the sale
 	 * 
 	 * @return the price description
 	 */
@@ -141,7 +141,7 @@ public class Sale implements Serializable {
 	}
 
 	/**
-	 * Set the price of the product
+	 * Set the price of the sale
 	 * 
 	 * @param price to be set
 	 */	
@@ -152,7 +152,7 @@ public class Sale implements Serializable {
 	
 	
 	/**
-	 * Get the publication date  of the product
+	 * Get the publication date  of the sale
 	 * 
 	 * @return the publication date  
 	 */
@@ -160,7 +160,7 @@ public class Sale implements Serializable {
 		return pubDate;
 	}
 	/**
-	 * Set the publication date  of the product
+	 * Set the publication date  of the sale
 	 * 
 	 * @param publication date to be set
 	 */	
@@ -170,7 +170,7 @@ public class Sale implements Serializable {
 
 
 	/**
-	 * Get the seller of a product
+	 * Get the seller of a sale
 	 * 
 	 * @return the associated seller
 	 */
@@ -179,16 +179,16 @@ public class Sale implements Serializable {
 	}
 
 	/**
-	 * Set the seller of a product
+	 * Set the seller of a sale
 	 * 
-	 * @param seller to assign to the product
+	 * @param seller to assign to the sale
 	 */
 	public void setSeller(Seller seller) {
 		this.seller = seller;
 	}
 
 	/**
-	 * Get the file of a product
+	 * Get the file of a sale
 	 * 
 	 * @return the associated file
 	 */

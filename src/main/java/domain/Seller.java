@@ -61,22 +61,22 @@ public class Seller implements Serializable {
 	}
 	
 	/**
-	 * This method creates/adds a product to a seller
+	 * This method creates/adds a sale to a seller
 	 * 
-	 * @param title of the product
-	 * @param description of the product
+	 * @param title of the sale
+	 * @param description of the sale
 	 * @param status 
 	 * @param selling price
 	 * @param publicationDate
-	 * @return Product
+	 * @return Sale
 	 */
 	
 
 	public Sale addSale(String title, String description,  float price, int status,  Date publicationDate, String file)  {
 
-		Sale product=new Sale(title,description, price, status,  publicationDate, file, this);
-        sales.add(product);
-        return product;
+		Sale sale=new Sale(title,description, price, status,  publicationDate, file, this);
+        sales.add(sale);
+        return sale;
 	}
 	/**
 	 * This method checks if the ride already exists for that driver
