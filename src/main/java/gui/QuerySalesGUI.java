@@ -27,7 +27,7 @@ public class QuerySalesGUI extends JFrame {
 
 	private DefaultTableModel tableModelProducts;
 
-	private JFrame thisFrame;
+	private JFrame thisFrame; 
 
 	private String[] columnNamesProducts = new String[] {
 			ResourceBundle.getBundle("Etiquetas").getString("CreateSaleGUI.Title"), 
