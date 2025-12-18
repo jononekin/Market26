@@ -1,5 +1,6 @@
 package domain;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -72,7 +73,7 @@ public class Seller implements Serializable {
 	 */
 	
 
-	public Sale addSale(String title, String description,  float price, int status,  Date publicationDate, String file)  {
+	public Sale addSale(String title, String description,  float price, int status,  Date publicationDate, File file)  {
 
 		Sale sale=new Sale(title,description, price, status,  publicationDate, file, this);
         sales.add(sale);

@@ -98,7 +98,7 @@ public class CreateSaleGUI extends JFrame {
 						float price = Float.parseFloat(jTextFieldPrice.getText());
 						String s=(String)jComboBoxStatus.getSelectedItem();
 						int numStatus=status.indexOf(s);
-						facade.createSale(fieldTitle.getText(), fieldDescription.getText(), price, numStatus, UtilDate.trim(jCalendar.getDate()), sellerMail, targetFile, encodedfile);
+						facade.createSale(fieldTitle.getText(), fieldDescription.getText(), price, numStatus, UtilDate.trim(jCalendar.getDate()), sellerMail, targetFile);
 						jLabelMsg.setText(ResourceBundle.getBundle("Etiquetas").getString("CreateSaleGUI.ProductCreated"));
 					
 					} catch (Exception e1) {

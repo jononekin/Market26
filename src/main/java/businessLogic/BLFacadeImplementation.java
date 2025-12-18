@@ -11,7 +11,6 @@ import domain.Sale;
 import exceptions.FileNotUploadedException;
 import exceptions.MustBeLaterThanTodayException;
 import exceptions.SaleAlreadyExistException;
-import gui.ImageCanvas;
 
 import java.awt.image.BufferedImage;
 import java.awt.Image;
@@ -44,9 +43,9 @@ public class BLFacadeImplementation  implements BLFacade {
 	 * {@inheritDoc}
 	 */
    @WebMethod
-	public Sale createSale(String title, String description, float price, int status, Date pubDate, String sellerEmail, File file, String fileBuffer) throws  FileNotUploadedException, MustBeLaterThanTodayException, SaleAlreadyExistException {
+	public Sale createSale(String title, String description, float price, int status, Date pubDate, String sellerEmail, File file) throws  FileNotUploadedException, MustBeLaterThanTodayException, SaleAlreadyExistException {
 		dbManager.open();
-		Sale product=dbManager.createSale(title, description, price, status, pubDate, sellerEmail, file, fileBuffer);		
+		Sale product=dbManager.createSale(title, description, price, status, pubDate, sellerEmail, file);		
 		dbManager.close();
 		return product;
    };

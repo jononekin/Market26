@@ -1,8 +1,10 @@
 package domain;
 
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Date;
 
+import javax.imageio.ImageIO;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -24,7 +26,7 @@ public class Sale implements Serializable {
 	private int  status;
 	private float price;
 	private Date pubDate;
-	private String file;
+	private String fileName;
 	
 	private Seller seller;  
 	
@@ -32,7 +34,7 @@ public class Sale implements Serializable {
 		super();
 	}
 		
-	public Sale(String title, String description, float price,int status, Date pubDate, String file, Seller seller) {
+	public Sale(String title, String description, float price,int status, Date pubDate, File file, Seller seller) {
 		super();
 
 		this.title = title;
@@ -40,9 +42,25 @@ public class Sale implements Serializable {
 		this.status = status;
 		this.price=price;
 		this.pubDate=pubDate;
-		this.file=file;
+		this.fileName=file.getName();
 
 		this.seller = seller;
+		try {
+		     BufferedImage img1 = ImageIO.read(file);
+
+			String path="src/main/resources/images/";
+		    File outputfile = new File(path+file.getName());
+		    
+			/*OutputStream outputStream = new FileOutputStream(outputfile);
+			byte[] data = Base64.getDecoder().decode(img);				
+			outputStream.write(data);
+		   */
+		    
+			   ImageIO.write(img1, "png", outputfile);  // ignore returned boolean
+
+		} catch(IOException ex) {
+		 //System.out.println("Write error for " + outputfile.getPath()  ": " + ex.getMessage());
+		  }
 	}
 	
 	/**
@@ -193,7 +211,7 @@ public class Sale implements Serializable {
 	 * @return the associated file
 	 */
 	public String getFile() {
-		return file;
+		return fileName;
 	}
 	
 	

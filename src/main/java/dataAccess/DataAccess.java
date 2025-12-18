@@ -2,7 +2,6 @@ package dataAccess;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -20,7 +19,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
-import javax.xml.bind.DatatypeConverter;
 
 import configuration.ConfigXML;
 import configuration.UtilDate;
@@ -29,7 +27,6 @@ import domain.Sale;
 import exceptions.FileNotUploadedException;
 import exceptions.MustBeLaterThanTodayException;
 import exceptions.SaleAlreadyExistException;
-import gui.ImageCanvas;
 
 /**
  * It implements the data access to the objectDb database
@@ -132,7 +129,7 @@ public class DataAccess  {
 	 * @return Product
  	 * @throws SaleAlreadyExistException if the same product already exists for the seller
 	 */
-	public Sale createSale(String title, String description,  float price, int status,  Date pubDate, String sellerEmail, File file, String img) throws  FileNotUploadedException, MustBeLaterThanTodayException, SaleAlreadyExistException {
+	public Sale createSale(String title, String description,  float price, int status,  Date pubDate, String sellerEmail, File file) throws  FileNotUploadedException, MustBeLaterThanTodayException, SaleAlreadyExistException {
 		
 
 		System.out.println(">> DataAccess: createProduct=> title= "+title+" seller="+sellerEmail);
@@ -151,27 +148,14 @@ public class DataAccess  {
 				throw new SaleAlreadyExistException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.SaleAlreadyExist"));
 			}
 
-			Sale sale = seller.addSale(title, description, price, status, pubDate, file.getName());
+			Sale sale = seller.addSale(title, description, price, status, pubDate, file);
 			//next instruction can be obviated
 
 			db.persist(seller); 
 			db.getTransaction().commit();
 			 System.out.println("sale stored "+sale+ " "+seller);
 
-			try {
-
-				String path="src/main/resources/images/";
-			    File outputfile = new File(path+file.getName());
-			    
-				OutputStream outputStream = new FileOutputStream(outputfile);
-				byte[] data = Base64.getDecoder().decode(img);				
-				outputStream.write(data);
-			   
-			   
-			   System.out.println("file stored "+img);
-			} catch(IOException ex) {
-			 //System.out.println("Write error for " + outputfile.getPath()  ": " + ex.getMessage());
-			  }
+			
 
 			   System.out.println("hasta aqui");
 
