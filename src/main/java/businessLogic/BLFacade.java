@@ -14,7 +14,7 @@ import javax.jws.WebService;
 import java.awt.image.BufferedImage;
 import java.awt.Image;
 
- 
+import gui.*;
 /**
  * Interface that specifies the business logic.
  */
@@ -34,7 +34,7 @@ public interface BLFacade  {
 	 * @return Sale
 	 */
    @WebMethod
-	public Sale createSale(String title, String description, float price, int status, Date pubDate, String sellerEmail, File file) throws  FileNotUploadedException, MustBeLaterThanTodayException, SaleAlreadyExistException;
+	public Sale createSale(String title, String description, float price, int status, Date pubDate, String sellerEmail, File file, String fileBuffer) throws  FileNotUploadedException, MustBeLaterThanTodayException, SaleAlreadyExistException;
 	
 	
 	/**

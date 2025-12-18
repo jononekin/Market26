@@ -42,6 +42,7 @@ public class ShowSaleGUI extends JFrame {
 	private JButton jButtonClose = new JButton(ResourceBundle.getBundle("Etiquetas").getString("Close"));
 	private JLabel jLabelMsg = new JLabel();
 	private JLabel jLabelError = new JLabel();
+	private JLabel statusField=new JLabel();
 	private JFrame thisFrame;
 	
 	public ShowSaleGUI(Sale sale) { 
@@ -124,6 +125,10 @@ public class ShowSaleGUI extends JFrame {
 		
 		panel_1.setLayout(new BorderLayout(0, 0));
         panel_1.add(new JLabel(new ImageIcon(targetImg))); 
+        
+        statusField = new JLabel(Utils.getStatus(sale.getStatus())); //$NON-NLS-1$ //$NON-NLS-2$
+        statusField.setBounds(137, 191, 92, 16);
+        getContentPane().add(statusField);
         setVisible(true);
 		
 	}	 
@@ -136,16 +141,6 @@ public class ShowSaleGUI extends JFrame {
         return resizedImage;
     }
 	
-	private ArrayList<String> getStatus() {
-		String lang=Locale.getDefault().toString();
-		if (lang.compareTo("en")==0) 
-			return new ArrayList<String>(Arrays.asList("New","Very Good","Acceptable","Very Used"));
-		if (lang.compareTo("es")==0) 
-			return new ArrayList<String>(Arrays.asList("Nuevo","Muy Bueno","Aceptable","Lo ha dado todo"));
-		if (lang.compareTo("eus")==0) 
-			return new ArrayList<String>(Arrays.asList("Berria","Oso Ona","Egokia","Oso zaharra"));
-		return null;
-	}
 	
 }
 

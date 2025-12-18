@@ -13,6 +13,8 @@ import com.toedter.calendar.JCalendar;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.awt.image.BufferedImage;
@@ -21,13 +23,14 @@ import java.beans.PropertyChangeListener;
 
 import businessLogic.BLFacade;
 import configuration.UtilDate;
-import domain.Sale;
 
 
 public class CreateSaleGUI extends JFrame {
 	
     File targetFile;
     BufferedImage targetImg;
+    String encodedfile = null;
+
     public JPanel panel_1;
     private static final int baseSize = 128;
 	private static final String basePath="src/main/resources/images/";
@@ -95,7 +98,7 @@ public class CreateSaleGUI extends JFrame {
 						float price = Float.parseFloat(jTextFieldPrice.getText());
 						String s=(String)jComboBoxStatus.getSelectedItem();
 						int numStatus=status.indexOf(s);
-						facade.createSale(fieldTitle.getText(), fieldDescription.getText(), price, numStatus, UtilDate.trim(jCalendar.getDate()), sellerMail, targetFile);
+						facade.createSale(fieldTitle.getText(), fieldDescription.getText(), price, numStatus, UtilDate.trim(jCalendar.getDate()), sellerMail, targetFile, encodedfile);
 						jLabelMsg.setText(ResourceBundle.getBundle("Etiquetas").getString("CreateSaleGUI.ProductCreated"));
 					
 					} catch (Exception e1) {
@@ -117,7 +120,7 @@ public class CreateSaleGUI extends JFrame {
 		jLabelError.setBounds(new Rectangle(16, 275, 384, 20));
 		jLabelError.setForeground(Color.red);
 		
-	    status=getStatus();
+	    status=Utils.getStatus();
 		for(String s:status) statusOptions.addElement(s);
 
 		this.getContentPane().add(jLabelMsg, null);
@@ -169,6 +172,7 @@ public class CreateSaleGUI extends JFrame {
 
 		            try {
 		                targetImg = rescale(ImageIO.read(targetFile));
+		                encodeFileToBase64Binary(targetFile);
 		            } catch (IOException ex) {
 		                //Logger.getLogger(MainAppFrame.class.getName()).log(Level.SEVERE, null, ex);
 		            }
@@ -238,7 +242,6 @@ public class CreateSaleGUI extends JFrame {
 				} else if (propertychangeevent.getPropertyName().equals("calendar")) {
 					calendarAnt = (Calendar) propertychangeevent.getOldValue();
 					calendarAct = (Calendar) propertychangeevent.getNewValue();
-					DateFormat dateformat1 = DateFormat.getDateInstance(1, jCalendar.getLocale());
 					
 					int monthAnt = calendarAnt.get(Calendar.MONTH);
 					int monthAct = calendarAct.get(Calendar.MONTH);
@@ -297,14 +300,24 @@ public class CreateSaleGUI extends JFrame {
 
 		}
 	}
-	private ArrayList<String> getStatus() {
-		String lang=Locale.getDefault().toString();
-		if (lang.compareTo("en")==0) 
-			return new ArrayList<String>(Arrays.asList("New","Very Good","Acceptable","Very Used"));
-		if (lang.compareTo("es")==0) 
-			return new ArrayList<String>(Arrays.asList("Nuevo","Muy Bueno","Aceptable","Lo ha dado todo"));
-		if (lang.compareTo("eus")==0) 
-			return new ArrayList<String>(Arrays.asList("Berria","Oso Ona","Egokia","Oso zaharra"));
-		return null;
-	}
+	
+	
+public  String encodeFileToBase64Binary(File file){
+        try {
+            @SuppressWarnings("resource")
+			FileInputStream fileInputStreamReader = new FileInputStream(file);
+            byte[] bytes = new byte[(int)file.length()];
+            fileInputStreamReader.read(bytes);
+            encodedfile=new String(Base64.getEncoder().encode(bytes));
+
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return encodedfile;
+    }
 }

@@ -44,7 +44,7 @@ public class QuerySalesGUI extends JFrame {
 		this.getContentPane().setLayout(null);
 		this.setSize(new Dimension(700, 500));
 		this.setTitle(ResourceBundle.getBundle("Etiquetas").getString("QuerySalesGUI.FindProducts"));
-		jLabelProducts.setBounds(52, 108, 259, 16);
+		jLabelProducts.setBounds(52, 108, 427, 16);
 		this.getContentPane().add(jLabelProducts);
 
 		jButtonClose.setBounds(new Rectangle(220, 379, 130, 30));
