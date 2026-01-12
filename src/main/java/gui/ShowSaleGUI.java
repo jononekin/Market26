@@ -119,7 +119,7 @@ public class ShowSaleGUI extends JFrame {
 		
 		
 		BLFacade facade = MainGUI.getBusinessLogic();
-		
+		String file=sale.getFile();
 		if (file!=null) {
 			Image img=facade.downloadImage(file);
 			targetImg = rescale((BufferedImage)img);
