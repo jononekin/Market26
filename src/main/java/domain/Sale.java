@@ -42,25 +42,28 @@ public class Sale implements Serializable {
 		this.status = status;
 		this.price=price;
 		this.pubDate=pubDate;
-		this.fileName=file.getName();
+		if (file!=null) {
+		    this.fileName=file.getName();
+			try {
+				BufferedImage img1 = ImageIO.read(file);
 
-		this.seller = seller;
-		try {
-		     BufferedImage img1 = ImageIO.read(file);
-
-			String path="src/main/resources/images/";
-		    File outputfile = new File(path+file.getName());
+				String path="src/main/resources/images/";
+				File outputfile = new File(path+file.getName());
 		    
-			/*OutputStream outputStream = new FileOutputStream(outputfile);
-			byte[] data = Base64.getDecoder().decode(img);				
-			outputStream.write(data);
-		   */
+				/*OutputStream outputStream = new FileOutputStream(outputfile);
+				byte[] data = Base64.getDecoder().decode(img);				
+				outputStream.write(data);
+				 */
 		    
 			   ImageIO.write(img1, "png", outputfile);  // ignore returned boolean
 
-		} catch(IOException ex) {
-		 //System.out.println("Write error for " + outputfile.getPath()  ": " + ex.getMessage());
-		  }
+			} catch(IOException ex) {
+				//System.out.println("Write error for " + outputfile.getPath()  ": " + ex.getMessage());
+		}
+		}
+
+		this.seller = seller;
+		
 	}
 	
 	/**
