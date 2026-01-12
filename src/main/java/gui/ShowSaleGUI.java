@@ -120,16 +120,18 @@ public class ShowSaleGUI extends JFrame {
 		
 		BLFacade facade = MainGUI.getBusinessLogic();
 		
-		Image img=facade.downloadImage(sale.getFile());
-		targetImg = rescale((BufferedImage)img);
+		if (file!=null) {
+			Image img=facade.downloadImage(file);
+			targetImg = rescale((BufferedImage)img);
 		
-		panel_1.setLayout(new BorderLayout(0, 0));
-        panel_1.add(new JLabel(new ImageIcon(targetImg))); 
+			panel_1.setLayout(new BorderLayout(0, 0));
+			panel_1.add(new JLabel(new ImageIcon(targetImg))); 
         
-        statusField = new JLabel(Utils.getStatus(sale.getStatus())); //$NON-NLS-1$ //$NON-NLS-2$
-        statusField.setBounds(137, 191, 92, 16);
-        getContentPane().add(statusField);
-        setVisible(true);
+			statusField = new JLabel(Utils.getStatus(sale.getStatus())); //$NON-NLS-1$ //$NON-NLS-2$
+			statusField.setBounds(137, 191, 92, 16);
+			getContentPane().add(statusField);
+			setVisible(true);
+		}
 		
 	}	 
 	public BufferedImage rescale(BufferedImage originalImage)
