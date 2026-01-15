@@ -123,16 +123,14 @@ public class ShowSaleGUI extends JFrame {
 		if (file!=null) {
 			Image img=facade.downloadImage(file);
 			targetImg = rescale((BufferedImage)img);
-		
 			panel_1.setLayout(new BorderLayout(0, 0));
 			panel_1.add(new JLabel(new ImageIcon(targetImg))); 
-        
-			statusField = new JLabel(Utils.getStatus(sale.getStatus())); //$NON-NLS-1$ //$NON-NLS-2$
-			statusField.setBounds(137, 191, 92, 16);
-			getContentPane().add(statusField);
-			setVisible(true);
 		}
-		
+		System.out.println("status: "+sale.getStatus());
+		statusField = new JLabel(Utils.getStatus(sale.getStatus())); 
+		statusField.setBounds(137, 191, 92, 16);
+		getContentPane().add(statusField);
+		setVisible(true);
 	}	 
 	public BufferedImage rescale(BufferedImage originalImage)
     {

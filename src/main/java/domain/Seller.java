@@ -72,10 +72,12 @@ public class Seller implements Serializable {
 	 * @return Sale
 	 */
 	
+	
 
-	public Sale addSale(String title, String description,  float price, int status,  Date publicationDate, File file)  {
 
-		Sale sale=new Sale(title,description, price, status,  publicationDate, file, this);
+	public Sale addSale(String title, String description, int status, float price,  Date pubDate, File file)  {
+		
+		Sale sale=new Sale(title, description, status, price,  pubDate, file, this);
         sales.add(sale);
         return sale;
 	}

@@ -3,11 +3,8 @@ package dataAccess;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -129,14 +126,16 @@ public class DataAccess  {
 	 * @return Product
  	 * @throws SaleAlreadyExistException if the same product already exists for the seller
 	 */
-	public Sale createSale(String title, String description,  float price, int status,  Date pubDate, String sellerEmail, File file) throws  FileNotUploadedException, MustBeLaterThanTodayException, SaleAlreadyExistException {
+	public Sale createSale(String title, String description, int status, float price,  Date pubDate, String sellerEmail, File file) throws  FileNotUploadedException, MustBeLaterThanTodayException, SaleAlreadyExistException {
 		
 
 		System.out.println(">> DataAccess: createProduct=> title= "+title+" seller="+sellerEmail);
 		try {
-			/*if(new Date().compareTo(pubDate)>=0) {
+		
+
+			if(pubDate.before(UtilDate.trim(new Date()))) {
 				throw new MustBeLaterThanTodayException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.ErrorSaleMustBeLaterThanToday"));
-			}*/
+			}
 			if (file==null)
 				throw new FileNotUploadedException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.ErrorFileNotUploadedException"));
 
@@ -148,7 +147,7 @@ public class DataAccess  {
 				throw new SaleAlreadyExistException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.SaleAlreadyExist"));
 			}
 
-			Sale sale = seller.addSale(title, description, price, status, pubDate, file);
+			Sale sale = seller.addSale(title, description, status, price, pubDate, file);
 			//next instruction can be obviated
 
 			db.persist(seller); 

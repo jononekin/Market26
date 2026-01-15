@@ -34,7 +34,7 @@ public interface BLFacade  {
 	 * @return Sale
 	 */
    @WebMethod
-	public Sale createSale(String title, String description, float price, int status, Date pubDate, String sellerEmail, File file) throws  FileNotUploadedException, MustBeLaterThanTodayException, SaleAlreadyExistException;
+	public Sale createSale(String title, String description, int status, float price, Date pubDate, String sellerEmail, File file) throws  FileNotUploadedException, MustBeLaterThanTodayException, SaleAlreadyExistException;
 	
 	
 	/**

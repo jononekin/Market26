@@ -2,7 +2,6 @@ package gui;
 
 import java.util.*;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,7 +15,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -64,7 +62,6 @@ public class CreateSaleGUI extends JFrame {
 	private JLabel jLabelMsg = new JLabel();
 	private JLabel jLabelError = new JLabel();
 	private JFrame thisFrame;
-	private final JButton btnNewButton_1 = new JButton("Mostrar imagen"); //$NON-NLS-1$ //$NON-NLS-2$
 	private final JButton btnNewButton_2 = new JButton("grabar Imagen"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	public CreateSaleGUI(String mail) {
@@ -98,7 +95,7 @@ public class CreateSaleGUI extends JFrame {
 						float price = Float.parseFloat(jTextFieldPrice.getText());
 						String s=(String)jComboBoxStatus.getSelectedItem();
 						int numStatus=status.indexOf(s);
-						facade.createSale(fieldTitle.getText(), fieldDescription.getText(), price, numStatus, UtilDate.trim(jCalendar.getDate()), sellerMail, targetFile);
+						facade.createSale(fieldTitle.getText(), fieldDescription.getText(), numStatus, price,  UtilDate.trim(jCalendar.getDate()), sellerMail, targetFile);
 						jLabelMsg.setText(ResourceBundle.getBundle("Etiquetas").getString("CreateSaleGUI.ProductCreated"));
 					
 					} catch (Exception e1) {
@@ -108,7 +105,7 @@ public class CreateSaleGUI extends JFrame {
 					}
 			}
 		});
-		jButtonClose.setBounds(new Rectangle(456, 306, 101, 30));
+		jButtonClose.setBounds(new Rectangle(328, 228, 101, 30));
 		jButtonClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				thisFrame.setVisible(false);			}
@@ -190,22 +187,7 @@ public class CreateSaleGUI extends JFrame {
 		panel_1 = new JPanel();
 		panel_1.setBounds(461, 209, 124, 86);
 		getContentPane().add(panel_1);
-		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String imagePath = targetFile.getAbsolutePath();
-                if (imagePath != null && !imagePath.isEmpty()) {
-                    File imageFile = new File(imagePath);
-                    if (imageFile.exists()) {
-                        try {
-                            Desktop.getDesktop().open(imageFile);
-                        } catch (IOException ex) {
-                            //textArea.setText(ResourceBundle.getBundle("Etiquetas").getString("ErreklamazioaTratatuGUI.ErroreaIrekitzean"));
-                        }
-			}}}
-		});
-		btnNewButton_1.setBounds(241, 307, 164, 29);
 		
-		getContentPane().add(btnNewButton_1);
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			

@@ -34,7 +34,7 @@ public class Sale implements Serializable {
 		super();
 	}
 		
-	public Sale(String title, String description, float price,int status, Date pubDate, File file, Seller seller) {
+	public Sale(String title, String description, int status, float price, Date pubDate, File file, Seller seller) {
 		super();
 
 		this.title = title;
@@ -50,10 +50,6 @@ public class Sale implements Serializable {
 				String path="src/main/resources/images/";
 				File outputfile = new File(path+file.getName());
 		    
-				/*OutputStream outputStream = new FileOutputStream(outputfile);
-				byte[] data = Base64.getDecoder().decode(img);				
-				outputStream.write(data);
-				 */
 		    
 			   ImageIO.write(img1, "png", outputfile);  // ignore returned boolean
 

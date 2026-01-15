@@ -80,7 +80,6 @@ public class QuerySalesGUI extends JFrame {
 		this.getContentPane().add(scrollPanelProducts, null);
 		
 		jTextFieldSearch = new JTextField();
-		jTextFieldSearch.setText(ResourceBundle.getBundle("Etiquetas").getString("QuerySalesGUI.Search")); //$NON-NLS-1$ //$NON-NLS-2$
 		jTextFieldSearch.setBounds(52, 56, 357, 26);
 		getContentPane().add(jTextFieldSearch);
 		jTextFieldSearch.setColumns(10);
