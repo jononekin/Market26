@@ -136,13 +136,13 @@ public class DataAccess  {
 			if(pubDate.before(UtilDate.trim(new Date()))) {
 				throw new MustBeLaterThanTodayException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.ErrorSaleMustBeLaterThanToday"));
 			}
-			if (file==null)
-				throw new FileNotUploadedException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.ErrorFileNotUploadedException"));
+			//if (file==null)
+			//	throw new FileNotUploadedException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.ErrorFileNotUploadedException"));
 
 			db.getTransaction().begin();
 			
 			Seller seller = db.find(Seller.class, sellerEmail);
-			if (seller.doesSaleExist(title)) {
+			if (seller.doesSaleExist( title,  description,  status,  price,  pubDate)) {
 				db.getTransaction().commit();
 				throw new SaleAlreadyExistException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.SaleAlreadyExist"));
 			}
