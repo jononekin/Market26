@@ -34,13 +34,13 @@ public class CreateSaleBDBlackTest {
 	private Seller seller; 
 
 	@Test
-	//sut.createSale:  The Seller("sellerTest@ehu.eus","Driver Test") HAS  NOT one sale "from" "to" in that "date". 
+	//sut.createSale:  The Seller("sellerTest@ehu.eus","Seller Test") HAS  NOT one sale with that "title" and "description" . 
 	// and the Ride must be created in DB
 	//The test supposes that the "Driver Test" does not exist in the DB
 
 	public void test1() {
-		String driverEmail="sellerTest@ehu.eus";
-		String driverUsername="Seller Test";
+		String sellerEmail="sellerTest@ehu.eus";
+		String sellerUsername="Seller Test";
 		
 		String title="playStation 5";
 		String description="Egoera oso ona";
@@ -61,13 +61,13 @@ public class CreateSaleBDBlackTest {
 		
 		testDA.open();
 		
-			testDA.createSeller(driverEmail, driverUsername);
+			testDA.createSeller(sellerEmail, sellerUsername);
 		
 		testDA.close();
 		try {
 			//invoke System Under Test (sut)  
 			sut.open();
-			Sale sale =sut.createSale(title, description, status, price, pubDate, driverEmail, file);
+			Sale sale =sut.createSale(title, description, status, price, pubDate, sellerEmail, file);
 			sut.close();			
 			
 			//verify the results
@@ -75,7 +75,7 @@ public class CreateSaleBDBlackTest {
 			
 			//q is in DB
 			testDA.open();
-			boolean exist=testDA.existSale(driverEmail, title, description, status, price, pubDate);
+			boolean exist=testDA.existSale(sellerEmail, title, description, status, price, pubDate);
 				
 			assertTrue(exist);
 			testDA.close();
@@ -98,7 +98,7 @@ public class CreateSaleBDBlackTest {
 		finally {   
 
 			testDA.open();
-				testDA.removeDriver(driverUsername);
+				testDA.removeSeller(sellerEmail);
 			testDA.close();
 			
 		        }

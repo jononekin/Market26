@@ -56,9 +56,9 @@ public class TestDataAccess {
 		System.out.println("TestDataAccess closed");
 	}
 
-	public boolean removeDriver(String name) {
-		System.out.println(">> TestDataAccess: removeDriver");
-		Seller d = db.find(Seller.class, name);
+	public boolean removeSeller(String email) {
+		System.out.println(">> TestDataAccess: removeSeller");
+		Seller d = db.find(Seller.class, email);
 		if (d!=null) {
 			db.getTransaction().begin();
 			db.remove(d);
@@ -67,12 +67,12 @@ public class TestDataAccess {
 		} else 
 		return false;
     }
-	public Seller createSeller(String name, String pass) {
+	public Seller createSeller(String email, String name) {
 		System.out.println(">> TestDataAccess: addSeller");
 		Seller seller=null;
 			db.getTransaction().begin();
 			try {
-			    seller=new Seller(name,pass);
+			    seller=new Seller(email,name);
 				db.persist(seller);
 				db.getTransaction().commit();
 			}
@@ -119,19 +119,19 @@ public class TestDataAccess {
 			return false;
 		}
 	
-	/*	public Sale removeSale(String sellerEmail, String from, String to, Date date ) {
+		public Sale removeSale(String sellerEmail, String name, String description, Date date ) {
 			System.out.println(">> TestDataAccess: removeRide");
 			Seller s = db.find(Seller.class, sellerEmail);
 			if (s!=null) {
 				db.getTransaction().begin();
-				Sale sale= s.removeSale(from, to, date);
+				Sale sale= s.removeSale(name, description, date);
 				db.getTransaction().commit();
 				return sale;
 
 			} else 
 			return null;
 
-		}*/
+		}
 
 		
 }

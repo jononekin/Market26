@@ -23,6 +23,7 @@ import domain.Seller;
 import domain.Sale;
 import exceptions.FileNotUploadedException;
 import exceptions.MustBeLaterThanTodayException;
+import exceptions.ParamNullException;
 import exceptions.SaleAlreadyExistException;
 
 /**
@@ -125,14 +126,14 @@ public class DataAccess  {
 	 * @param publicationDate
 	 * @return Product
  	 * @throws SaleAlreadyExistException if the same product already exists for the seller
+	 * @throws ParamNullException 
 	 */
-	public Sale createSale(String title, String description, int status, float price,  Date pubDate, String sellerEmail, File file) throws  FileNotUploadedException, MustBeLaterThanTodayException, SaleAlreadyExistException {
+	public Sale createSale(String title, String description, int status, float price,  Date pubDate, String sellerEmail, File file) throws  ParamNullException, MustBeLaterThanTodayException, SaleAlreadyExistException, ParamNullException {
 		
-
 		System.out.println(">> DataAccess: createProduct=> title= "+title+" seller="+sellerEmail);
+		if (title==null || description==null || pubDate==null || sellerEmail==null)
+			throw new ParamNullException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.ParamNullException"));
 		try {
-		
-
 			if(pubDate.before(UtilDate.trim(new Date()))) {
 				throw new MustBeLaterThanTodayException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.ErrorSaleMustBeLaterThanToday"));
 			}
@@ -148,25 +149,16 @@ public class DataAccess  {
 			}
 
 			Sale sale = seller.addSale(title, description, status, price, pubDate, file);
-			//next instruction can be obviated
 
-			db.persist(seller); 
 			db.getTransaction().commit();
-			 System.out.println("sale stored "+sale+ " "+seller);
-
-			
-
-			   System.out.println("hasta aqui");
+			System.out.println("sale stored "+sale+ " "+seller);
 
 			return sale;
 		} catch (NullPointerException e) {
 			   e.printStackTrace();
-			// TODO Auto-generated catch block
 			db.getTransaction().commit();
 			return null;
-		}
-		
-		
+		}	
 	}
 	
 	/**
