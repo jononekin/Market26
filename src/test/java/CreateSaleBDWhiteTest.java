@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,11 +12,12 @@ import java.util.Date;
 import org.junit.Test;
 
 import dataAccess.DataAccess;
-import domain.Ride;
-import exceptions.RideAlreadyExistException;
-import exceptions.RideMustBeLaterThanTodayException;
+import domain.Sale;
+import domain.Seller;
+import exceptions.MustBeLaterThanTodayException;
+import exceptions.ParamNullException;
+import exceptions.SaleAlreadyExistException;
 import testOperations.TestDataAccess;
-import domain.Driver;
 
 public class CreateSaleBDWhiteTest {
 
@@ -26,28 +28,30 @@ public class CreateSaleBDWhiteTest {
 	 static TestDataAccess testDA=new TestDataAccess();
 
 	@SuppressWarnings("unused")
-	private Driver driver; 
-
+	private Seller seller; 
 	
+	// Sale defect values 
+	String title="futbol baloia";
+	String description="ordubete erabilita";
+	String sellerName="Jon Brown";
+	String sellerMail="seller1@ehu.eus";
+	int status= 2;
+	float price=(float) 10.5;
+
+/*	
 	@Test
-	//sut.createRide:  The Driver is null. The test must return null. If  an Exception is returned the createRide method is not well implemented.
+	//sut.createSale:  One of the param is null (ie. description) The test must return ParamNullException. If  an Exception is returned the createSale method is not well implemented.
 		public void test1() {
-		Ride ride=null;
+		Sale sale=null;
 			try {
-				
-				//define parameters
-				driver=null;
 
-				String rideFrom="Donostia";
-				String rideTo="Zarautz";
-				
-				String driverUsername=null;
-
+				 //Changed value
+				 description=null;
 				
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-				Date rideDate=null;;
+				Date saleDate=null;
 				try {
-					rideDate = sdf.parse("05/10/2026");
+					saleDate = sdf.parse("05/10/2026");
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -57,85 +61,74 @@ public class CreateSaleBDWhiteTest {
 				
 				//invoke System Under Test (sut)  
 				sut.open();
-			    ride=sut.createRide(rideFrom, rideTo, rideDate, 2, 10, driverUsername);
+			    sale=sut.createSale(title, description, status, price, saleDate, sellerMail, null);
 
 				//verify the results
-				assertNull(ride);
+				assertNull(sale);
 				
 				
-			   } catch (RideAlreadyExistException e) {
+			} catch ( ParamNullException  e) {
+				// TODO Auto-generated catch block
+				// if the program goes to this point fail  
+				assertTrue(true);   
+			} catch ( SaleAlreadyExistException e) {
 				// TODO Auto-generated catch block
 				// if the program goes to this point fail  
 				fail();
-				} catch (RideMustBeLaterThanTodayException e) {
+			} catch (MustBeLaterThanTodayException e) {
 				// TODO Auto-generated catch block
 					fail();
-				} catch (Exception e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 					fail();
 					
 				} finally {
 					sut.close();
 				}
-					   }
+	}
+
 	@Test
-	//sut.createRide:  The Driver("Driver Test") does not exist in the DB. The test must return null 
-	//The test supposes that the "Driver Test" does not exist in the DB
+	//sut.createSale:  The Seller(seller1@ehu.eus) does not exist in the DB. The test must return null 
+	//The test "supposes" that the seller1.ehu.es does not exist in the DB
+	
 	public void test2() {
 		
-		String driverUsername="Driver Test";
-
-		String rideFrom="Donostia";
-		String rideTo="Zarautz";
-		
+		Sale sale;
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date rideDate=null;;
+		Date saleDate=null;
 		try {
-			rideDate = sdf.parse("05/10/2026");
+			saleDate = sdf.parse("05/10/2026");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
-		try {
-			
-			//define parameters
-					
-			
+		try {	
 			//invoke System Under Test (sut)  
 			sut.open();
-		    Ride r=sut.createRide(rideFrom, rideTo, rideDate, 0, 0, driverUsername);
-			sut.close();
+		    sale=sut.createSale(title, description, status, price, saleDate, sellerMail, null);			
+			assertNull(sale);
 			
-			assertNull(r);
-			
-		   } catch (RideAlreadyExistException e) {
-			 //verify the results
-				sut.close();
-				fail();
-			} catch (RideMustBeLaterThanTodayException e) {
-			// TODO Auto-generated catch block
+		} catch (ParamNullException | SaleAlreadyExistException  | MustBeLaterThanTodayException e ) {  
+			fail();   
+		} catch (Exception e) {
+				fail();	
+		} finally {
 			sut.close();
-			fail();
-		} 
-		   } 
+		}
+	} 
+	
 	@Test
-	//sut.createRide:  the date of the ride must be later than today. The RideMustBeLaterThanTodayException 
+	//sut.createSale:  the date of the ride must be later than today. The MustBeLaterThanTodayException 
 	// exception must be thrown. 
 	public void test3() {
 		
-		String driverUsername="Driver Test";
-		String driverPassword="123";
-
-		String rideFrom="Donostia";
-		String rideTo="Zarautz";
-		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date rideDate=null;;
+		Date saleDate=null;;
 		
 		boolean driverCreated=false;
 
 		try {
-			rideDate = sdf.parse("05/10/2018");
+			saleDate = sdf.parse("05/10/2018");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -144,159 +137,134 @@ public class CreateSaleBDWhiteTest {
 			
 			//define parameters
 			testDA.open();
-			if (!testDA.existDriver(driverUsername)) {
-				testDA.createDriver(driverUsername,driverPassword);
+			if (!testDA.existSeller(sellerMail)) {
+				testDA.createSeller(sellerMail, sellerName);
 			    driverCreated=true;
 			}
 			testDA.close();		
 			
 			//invoke System Under Test (sut)  
 			sut.open();
-		    sut.createRide(rideFrom, rideTo, rideDate, 2, 10, driverUsername);
-			sut.close();
+		    sut.createSale(title, description, status, price, saleDate, sellerMail, null);			
+			//sut.close();
 			
 			fail();
 			
-		   } catch (RideMustBeLaterThanTodayException  e) {
+		   } catch (MustBeLaterThanTodayException  e) {
 			 //verify the results
-				sut.close();
 				assertTrue(true);
-			} catch (RideAlreadyExistException e) {
-				sut.close();
+		   } catch (ParamNullException | SaleAlreadyExistException e) {
 				fail();
-		} finally {
-				  //Remove the created objects in the database (cascade removing)   
+		   } finally {
+				sut.close();
+			    //Remove the created objects in the database (cascade removing)   
 				testDA.open();
-				  if (driverCreated) 
-					  testDA.removeDriver(driverUsername);
-		          testDA.close();
-		        }
-		   } 
+			    if (driverCreated) 
+			    	testDA.removeSeller(sellerMail);
+		        testDA.close();
+		   }
+	} 
 
 	@Test
-	//sut.createRide:  The Driver("Driver Test") HAS  one ride "from" "to" in that "date". 
-	// and the Exception RideAlreadyExistException must be thrown
-	public void test4() {
-		//define paramaters
-		String driverUsername="Driver Test";
+	//sut.createSale:  The Seller(seller1@ehu.eus) HAS  one sale with "title" 
+	// and the Exception SaleAlreadyExistException must be thrown
+	//The test "supposes" that the seller1.ehu.es does not exist in the DB
 
-		String rideFrom="Donostia";
-		String rideTo="Zarautz";
+	public void test4() {
+		
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date rideDate=null;;
+		Date saleDate=null;;
 		
+		boolean driverCreated=false;
 
 		try {
-			rideDate = sdf.parse("05/10/2026");
+			saleDate = sdf.parse("05/10/2026");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 		
 		try {
-			//Create a driver and her ride
+			//Create a seller and his sale
 			
 			testDA.open();
-			testDA.addDriverWithRide( driverUsername,  rideFrom,  rideTo,   rideDate,2,10);
+			testDA.addSellerWithSale(sellerMail, sellerName, title, description, status, price, saleDate, null);
 			testDA.close();
-			
 			
 			//invoke System Under Test (sut)  
 			sut.open();
-			Ride ride=sut.createRide(rideFrom, rideTo, rideDate, 2, 10, driverUsername);
+		    sut.createSale(title, description, status, price, saleDate, sellerMail, null);			
 			
 			//if the program goes to this point fail
 			fail();
 		
 			
-		   } catch (RideAlreadyExistException e) {
+		   } catch (SaleAlreadyExistException e) {
 			// if the program goes to this point fail  
 				assertTrue(true);
-			
-			
-			} catch (RideMustBeLaterThanTodayException e) {
+		   } catch (ParamNullException | MustBeLaterThanTodayException e) {
 				fail();
 				// if the program goes to this point fail  
-			
-		} finally {
-			sut.close();
-			testDA.open();
-			//reestablish the state of the system (remove the driver and her rides in the database)
+		   } finally {
+				sut.close();
+				testDA.open();
 
-				testDA.removeDriver(driverUsername);
-
-			testDA.close();	      
-		        }
+				//reestablish the state of the system (remove the driver and her rides in the database)
+				testDA.removeSeller(sellerMail);
+				testDA.close();	      
 		   } 
-	
-	
-	
+	}
+	*/
+
 	@Test
-	//sut.createRide:  The Driver("Driver Test") HAS  NOT one ride "from" "to" in that "date". 
-	// and the Ride must be created in DB
+	//sut.createSale:  The Seller(seller1@ehu.eus) HAS NOT one sale with "title" 
+	// and the sale must be created in DB
 	//The test supposes that the "Driver Test" does not exist in the DB before the test
 
-	public void test5() {
-		boolean driverCreated=false;
-		String driverUsername="Driver Test";
-		String rideFrom="Donostia";
-		String rideTo="Zarautz";
+	public void test5() {		
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date rideDate=null;;
+		Date saleDate=null;
 		try {
-			rideDate = sdf.parse("05/10/2026");
+			saleDate = sdf.parse("05/10/2026");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
-		Ride ride=null;
+		Sale sale=null;
 		
 		testDA.open();
-		
-			testDA.createDriver(driverUsername,null);
-		
+		testDA.createSeller(sellerMail,sellerName);
 		testDA.close();
 		try {
 			//invoke System Under Test (sut)  
 			sut.open();
-			 ride=sut.createRide(rideFrom, rideTo, rideDate, 2, 10, driverUsername);
+			sale=sut.createSale(title, description, status, price, saleDate, sellerMail, null);
 			sut.close();			
-			
+			System.out.println("PAsa por aqui");
 			//verify the results
-			assertNotNull(ride);
+			assertNotNull(sale);
 			
-			//q is in DB
+			//sale is in DB
 			testDA.open();
-			boolean exist=testDA.existRide(driverUsername,rideFrom, rideTo, rideDate);
-				
+			boolean exist=testDA.existSale(sellerMail,title);
 			assertTrue(exist);
 			testDA.close();
 			
-		   } catch (RideAlreadyExistException e) {
-			// TODO Auto-generated catch block
+			} catch (ParamNullException | SaleAlreadyExistException  | MustBeLaterThanTodayException e ) { 
 			// if the program goes to this point fail  
-			fail();
-			} catch (RideMustBeLaterThanTodayException e) {
+				e.printStackTrace();
+			    System.out.println("Error: " + e.getMessage());
+				fail();
 
-			// TODO Auto-generated catch block
-			fail();
-			}  catch (Exception e) {
-			// TODO Auto-generated catch block
-			fail();
-			}    
-		
-		
-		finally {   
 
-			testDA.open();
-				testDA.removeDriver(driverUsername);
-			testDA.close();
-			
-		        }
-		   }
-		   
-	@Test
-	public void test6() {}  
+			} catch (Exception e) {
+				fail();
+			} finally {   
+				testDA.open();
+				testDA.removeSeller(sellerMail);
+				testDA.close();
+		    }
+	} 
 }

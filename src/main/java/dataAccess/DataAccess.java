@@ -130,7 +130,7 @@ public class DataAccess  {
 	 */
 	public Sale createSale(String title, String description, int status, float price,  Date pubDate, String sellerEmail, File file) throws  ParamNullException, MustBeLaterThanTodayException, SaleAlreadyExistException, ParamNullException {
 		
-		System.out.println(">> DataAccess: createProduct=> title= "+title+" seller="+sellerEmail);
+		System.out.println(">> DataAccess: createSale=> title= "+title+" seller="+sellerEmail);
 		if (title==null || description==null || pubDate==null || sellerEmail==null)
 			throw new ParamNullException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.ParamNullException"));
 		try {
@@ -155,7 +155,6 @@ public class DataAccess  {
 
 			return sale;
 		} catch (NullPointerException e) {
-			   e.printStackTrace();
 			db.getTransaction().commit();
 			return null;
 		}	

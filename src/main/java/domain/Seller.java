@@ -115,7 +115,7 @@ public class Seller implements Serializable {
 		return true;
 	}
 
-	public void removeSale (String title, String description) {}
+	public Sale removeSale (String title, String description) {return null;}
 	
 	
 }

@@ -110,11 +110,11 @@ public class TestDataAccess {
 				return null;
 	    }
 		
-	public boolean existSale(String sellerEmail, String title, String description, int status, float price, Date pubDate) {
+	public boolean existSale(String sellerEmail, String title) {
 			System.out.println(">> TestDataAccess: existSale");
 			Seller s = db.find(Seller.class, sellerEmail);
 			if (s!=null) {
-				return s.doesSaleExists(title, description, status,  price,  pubDate);
+				return s.doesSaleExists(title, null, 0,  0,  null);
 			} else 
 			return false;
 		}
@@ -124,7 +124,7 @@ public class TestDataAccess {
 			Seller s = db.find(Seller.class, sellerEmail);
 			if (s!=null) {
 				db.getTransaction().begin();
-				Sale sale= s.removeSale(name, description, date);
+				Sale sale= s.removeSale(name, description);
 				db.getTransaction().commit();
 				return sale;
 
