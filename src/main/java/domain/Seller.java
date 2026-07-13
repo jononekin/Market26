@@ -89,7 +89,9 @@ public class Seller implements Serializable {
 	 * @param date the date of the ride 
 	 * @return true if the ride exists and false in other case
 	 */
-	public boolean doesSaleExists(String title, String description, int status, float price, Date pubDate) {
+	
+	
+	public boolean doesSaleExists(String title) {
 		for (Sale s:sales)
 			if ( s.getTitle().compareTo(title)==0 )
 			 return true;
@@ -110,10 +112,10 @@ public class Seller implements Serializable {
 		return true;
 	}
 
-	public boolean doesSaleExist(String title, String description, int status, float price, Date pubDate) {
+	/*public boolean doesSaleExist(String title, String description, int status, float price, Date pubDate) {
 		// TODO Auto-generated method stub
 		return true;
-	}
+	}*/
 
 	public Sale removeSale (String title, String description) {return null;}
 	

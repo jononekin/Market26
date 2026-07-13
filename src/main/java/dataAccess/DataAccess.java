@@ -143,7 +143,7 @@ public class DataAccess  {
 			db.getTransaction().begin();
 			
 			Seller seller = db.find(Seller.class, sellerEmail);
-			if (seller.doesSaleExist( title,  description,  status,  price,  pubDate)) {
+			if (seller.doesSaleExists( title)) {
 				db.getTransaction().commit();
 				throw new SaleAlreadyExistException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.SaleAlreadyExist"));
 			}

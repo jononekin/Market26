@@ -33,7 +33,7 @@ public class CreateSaleBDWhiteTest {
 	// Sale defect values 
 	String title="futbol baloia";
 	String description="ordubete erabilita";
-	String sellerName="Jon Brown";
+	String sellerName="Seller Test";
 	String sellerMail="seller1@ehu.eus";
 	int status= 2;
 	float price=(float) 10.5;
