@@ -15,7 +15,6 @@ import javax.persistence.Persistence;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
@@ -42,16 +41,27 @@ public class CreateSaleMockBlackTest {
 	@Mock
     protected  EntityTransaction  et;
 	
-	private static Seller seller; 
-	private static String sellerMail;
-	private static String sellerName;
-	private static String title;
-	private static String description;
-	private static int status;
-	private static float price;
-	private static Date pubDate;
-	@BeforeClass
-    public static void defaultValues() {
+	private  Seller seller; 
+	private  String sellerMail;
+	private  String sellerName;
+	private  String title;
+	private  String description;
+	private  int status;
+	private  float price;
+	private  Date pubDate;
+	
+	
+	@Before
+    public  void init() {
+        MockitoAnnotations.openMocks(this);
+        persistenceMock = Mockito.mockStatic(Persistence.class);
+		persistenceMock.when(() -> Persistence.createEntityManagerFactory(Mockito.any()))
+        .thenReturn(entityManagerFactory);
+        
+        Mockito.doReturn(db).when(entityManagerFactory).createEntityManager();
+		Mockito.doReturn(et).when(db).getTransaction();
+	    sut=new DataAccess(db);
+	    
 	    sellerMail="sellerTest@ehu.eus";
 		sellerName="Seller Test";
 		seller=new Seller(sellerMail,sellerName);
@@ -67,18 +77,7 @@ public class CreateSaleMockBlackTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
-    }
-	
-	@Before
-    public  void init() {
-        MockitoAnnotations.openMocks(this);
-        persistenceMock = Mockito.mockStatic(Persistence.class);
-		persistenceMock.when(() -> Persistence.createEntityManagerFactory(Mockito.any()))
-        .thenReturn(entityManagerFactory);
-        
-        Mockito.doReturn(db).when(entityManagerFactory).createEntityManager();
-		Mockito.doReturn(et).when(db).getTransaction();
-	    sut=new DataAccess(db);
+	    
         Mockito.when(db.find(Seller.class, seller.getEmail())).thenReturn(seller);
 
     }
@@ -145,10 +144,32 @@ public class CreateSaleMockBlackTest {
 				fail();
 			} 
 	}
-	
+	@Test
+	//sut.createSale:  The title parameter is ""
+	public void test3() {
+		title= "";
+		
+		try {
+			//invoke System Under Test (sut)  
+			sut.open();
+			Sale s=sut.createSale(title, description, status, price, pubDate, sellerMail, null);
+			sut.close();
+			//sale is not created
+			assertNull(s);
+			
+			} catch (ParamNullException | SaleAlreadyExistException  | MustBeLaterThanTodayException e ) { 
+		// if the program goes to this point fail  
+			e.printStackTrace();
+		    System.out.println("Error: " + e.getMessage());
+			fail();
+
+		}catch (Exception e) {
+				fail();
+			} 
+	}
 	@Test
 	//sut.createSale:  The title parameter has not letters
-	public void test3() {
+	public void test4() {
 		title= "1234";
 		
 		try {
@@ -219,6 +240,7 @@ public class CreateSaleMockBlackTest {
 				fail();
 			} 
 	}
+	
 	@Test
 	//sut.createSale:  The status > 3 
 	public void test7() {

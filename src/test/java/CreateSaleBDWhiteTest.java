@@ -1,14 +1,13 @@
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import dataAccess.DataAccess;
@@ -28,211 +27,162 @@ public class CreateSaleBDWhiteTest {
 	 static TestDataAccess testDA=new TestDataAccess();
 
 	@SuppressWarnings("unused")
-	private Seller seller; 
+	private  Seller seller; 
+	private  String sellerMail;
+	private  String sellerName;
+	private  String title;
+	private  String description;
+	private  int status;
+	private  float price;
+	private  Date pubDate;
 	
-	// Sale defect values 
-	String title="futbol baloia";
-	String description="ordubete erabilita";
-	String sellerName="Seller Test";
-	String sellerMail="seller1@ehu.eus";
-	int status= 2;
-	float price=(float) 10.5;
-
-/*	
-	@Test
-	//sut.createSale:  One of the param is null (ie. description) The test must return ParamNullException. If  an Exception is returned the createSale method is not well implemented.
-		public void test1() {
-		Sale sale=null;
-			try {
-
-				 //Changed value
-				 description=null;
-				
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-				Date saleDate=null;
-				try {
-					saleDate = sdf.parse("05/10/2026");
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}	
-				
-				
-				
-				//invoke System Under Test (sut)  
-				sut.open();
-			    sale=sut.createSale(title, description, status, price, saleDate, sellerMail, null);
-
-				//verify the results
-				assertNull(sale);
-				
-				
-			} catch ( ParamNullException  e) {
-				// TODO Auto-generated catch block
-				// if the program goes to this point fail  
-				assertTrue(true);   
-			} catch ( SaleAlreadyExistException e) {
-				// TODO Auto-generated catch block
-				// if the program goes to this point fail  
-				fail();
-			} catch (MustBeLaterThanTodayException e) {
-				// TODO Auto-generated catch block
-					fail();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-					fail();
-					
-				} finally {
-					sut.close();
-				}
-	}
-
-	@Test
-	//sut.createSale:  The Seller(seller1@ehu.eus) does not exist in the DB. The test must return null 
-	//The test "supposes" that the seller1.ehu.es does not exist in the DB
-	
-	public void test2() {
-		
-		Sale sale;
+	@Before
+    public  void defaultValues() {
+	    sellerMail="sellerTest@ehu.eus";
+		sellerName="Seller Test";
+		title="futbol baloia";
+		description="Used one hour";
+		status=0;
+		price=10;
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date saleDate=null;
+		pubDate=null;
 		try {
-			saleDate = sdf.parse("05/10/2026");
+			pubDate = sdf.parse("05/10/2026");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
-		try {	
-			//invoke System Under Test (sut)  
-			sut.open();
-		    sale=sut.createSale(title, description, status, price, saleDate, sellerMail, null);			
-			assertNull(sale);
-			
-		} catch (ParamNullException | SaleAlreadyExistException  | MustBeLaterThanTodayException e ) {  
-			fail();   
-		} catch (Exception e) {
-				fail();	
-		} finally {
-			sut.close();
-		}
-	} 
-	
+    }
 	@Test
-	//sut.createSale:  the date of the ride must be later than today. The MustBeLaterThanTodayException 
-	// exception must be thrown. 
-	public void test3() {
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date saleDate=null;;
-		
-		boolean driverCreated=false;
-
+	//sut.createSale:  Some of the parameters are null
+	public void test1() {
+		description= null;
 		try {
-			saleDate = sdf.parse("05/10/2018");
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
-		try {
-			
-			//define parameters
-			testDA.open();
-			if (!testDA.existSeller(sellerMail)) {
-				testDA.createSeller(sellerMail, sellerName);
-			    driverCreated=true;
-			}
-			testDA.close();		
-			
 			//invoke System Under Test (sut)  
 			sut.open();
-		    sut.createSale(title, description, status, price, saleDate, sellerMail, null);			
-			//sut.close();
+			sut.createSale(title, description, status, price, pubDate, sellerMail, null);
+			sut.close();			
+			fail("The sale must not be created");
 			
-			fail();
-			
-		   } catch (MustBeLaterThanTodayException  e) {
-			 //verify the results
+			} catch (ParamNullException e ) { 
+			// if the program goes to this point true  
 				assertTrue(true);
-		   } catch (ParamNullException | SaleAlreadyExistException e) {
-				fail();
-		   } finally {
-				sut.close();
-			    //Remove the created objects in the database (cascade removing)   
-				testDA.open();
-			    if (driverCreated) 
-			    	testDA.removeSeller(sellerMail);
-		        testDA.close();
-		   }
-	} 
+			} catch ( SaleAlreadyExistException  | MustBeLaterThanTodayException e ) { 
+		// if the program goes to this point fail  
+			e.printStackTrace();
+		    System.out.println("Error: " + e.getMessage());
+			fail();
 
+		}catch (Exception e) {
+				fail();
+			} 
+	}
 	@Test
-	//sut.createSale:  The Seller(seller1@ehu.eus) HAS  one sale with "title" 
-	// and the Exception SaleAlreadyExistException must be thrown
-	//The test "supposes" that the seller1.ehu.es does not exist in the DB
+	//sut.createSale:  The seller must be in the DB (try captures null)
+	public void test2() {
+		sellerMail="sellerFake";
+		try {
+			//invoke System Under Test (sut)  
+			sut.open();
+			System.out.println(title+ " "+description+" "+status+ " "+ price + " "+ pubDate +" "+sellerMail);
+			Sale s=sut.createSale(title, description, status, price, pubDate, sellerMail, null);
+			sut.close();
+			//sale is not created
+			assertNull(s);
+			
+			//sale is not in DB
+			testDA.open();
+			boolean exist=testDA.existSale(sellerMail,description);
+			assertTrue(!exist);
+			testDA.close();
+			
+			} catch (ParamNullException | SaleAlreadyExistException  | MustBeLaterThanTodayException e ) { 
+		// if the program goes to this point fail  
+			e.printStackTrace();
+		    System.out.println("Error: " + e.getMessage());
+			fail();
+
+		}catch (Exception e) {
+				fail();
+			} 
+	}
+	
+	@Test
+	//sut.createSale:  pubDate must be later that today 
+	public void test3() {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		pubDate=null;
+		try {
+			pubDate = sdf.parse("05/10/2020");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		try {
+			//invoke System Under Test (sut)  
+			sut.open();
+			sut.createSale(title, description, status, price, pubDate, sellerMail, null);
+			sut.close();
+			
+			} catch ( MustBeLaterThanTodayException e ) { 
+		    // if the program goes to this point true  
+			assertTrue(true);
+
+		} catch (ParamNullException | SaleAlreadyExistException   e ) { 
+		// if the program goes to this point fail  
+			e.printStackTrace();
+		    System.out.println("Error: " + e.getMessage());
+			fail();
+
+		}catch (Exception e) {
+				fail();
+			} 
+	}
+	
+	@Test
+	//sut.createSale:  The Seller("sellerTest@ehu.eus","Seller Test") HAS one sale with that title and the same "title". sale is created. 
 
 	public void test4() {
 		
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date saleDate=null;;
-		
-		boolean driverCreated=false;
-
-		try {
-			saleDate = sdf.parse("05/10/2026");
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
-		
-		try {
-			//Create a seller and his sale
-			
-			testDA.open();
-			testDA.addSellerWithSale(sellerMail, sellerName, title, description, status, price, saleDate, null);
-			testDA.close();
-			
-			//invoke System Under Test (sut)  
+		testDA.open();
+		testDA.addSellerWithSale( sellerMail, sellerName, title, description, status, price, pubDate, null);
+		testDA.close();
+		try {	
+			//verify the results
 			sut.open();
-		    sut.createSale(title, description, status, price, saleDate, sellerMail, null);			
-			
-			//if the program goes to this point fail
+			sut.createSale(title, description, status, price, pubDate, sellerMail, null);
+			sut.close();
 			fail();
-		
 			
-		   } catch (SaleAlreadyExistException e) {
-			// if the program goes to this point fail  
+			} catch (SaleAlreadyExistException e ) { 
+			// if the program goes to this point true  
 				assertTrue(true);
-		   } catch (ParamNullException | MustBeLaterThanTodayException e) {
-				fail();
-				// if the program goes to this point fail  
-		   } finally {
-				sut.close();
-				testDA.open();
 
-				//reestablish the state of the system (remove the driver and her rides in the database)
+
+			} catch (ParamNullException  | MustBeLaterThanTodayException e ) { 
+			// if the program goes to this point fail  
+				e.printStackTrace();
+			    System.out.println("Error: " + e.getMessage());
+				fail();
+
+
+			}catch (Exception e) {
+				fail();
+			} finally {   
+				testDA.open();
 				testDA.removeSeller(sellerMail);
-				testDA.close();	      
-		   } 
+				testDA.close();
+		    }
 	}
-	*/
+
 
 	@Test
 	//sut.createSale:  The Seller(seller1@ehu.eus) HAS NOT one sale with "title" 
 	// and the sale must be created in DB
-	//The test supposes that the "Driver Test" does not exist in the DB before the test
+	//The test supposes that the "Seller Test" does not exist in the DB before the test
 
 	public void test5() {		
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date saleDate=null;
-		try {
-			saleDate = sdf.parse("05/10/2026");
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
-		Sale sale=null;
 		
 		testDA.open();
 		testDA.createSeller(sellerMail,sellerName);
@@ -240,9 +190,9 @@ public class CreateSaleBDWhiteTest {
 		try {
 			//invoke System Under Test (sut)  
 			sut.open();
-			sale=sut.createSale(title, description, status, price, saleDate, sellerMail, null);
+			Sale sale=sut.createSale(title, description, status, price, pubDate, sellerMail, null);
 			sut.close();			
-			System.out.println("PAsa por aqui");
+			
 			//verify the results
 			assertNotNull(sale);
 			
@@ -267,4 +217,5 @@ public class CreateSaleBDWhiteTest {
 				testDA.close();
 		    }
 	} 
+	
 }

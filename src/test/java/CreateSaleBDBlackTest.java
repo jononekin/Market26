@@ -1,24 +1,18 @@
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.ResourceBundle;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
-import configuration.UtilDate;
 import dataAccess.DataAccess;
 import domain.Sale;
 import domain.Seller;
-import exceptions.FileNotUploadedException;
 import exceptions.MustBeLaterThanTodayException;
 import exceptions.ParamNullException;
 import exceptions.SaleAlreadyExistException;
@@ -33,16 +27,17 @@ public class CreateSaleBDBlackTest {
 	 static TestDataAccess testDA=new TestDataAccess();
 
 	@SuppressWarnings("unused")
-	private static Seller seller; 
-	private static String sellerMail;
-	private static String sellerName;
-	private static String title;
-	private static String description;
-	private static int status;
-	private static float price;
-	private static Date pubDate;
-	@BeforeClass
-    public static void defaultValues() {
+	private  Seller seller; 
+	private  String sellerMail;
+	private  String sellerName;
+	private  String title;
+	private  String description;
+	private  int status;
+	private  float price;
+	private  Date pubDate;
+	
+	@Before
+    public void defaultValues() {
 	    sellerMail="sellerTest@ehu.eus";
 		sellerName="Seller Test";
 		title="futbol baloia";
@@ -58,7 +53,7 @@ public class CreateSaleBDBlackTest {
 			e.printStackTrace();
 		}	
     }
-	
+
 	@Test
 	//sut.createSale:  The Seller("sellerTest@ehu.eus","Seller Test") HAS  NOT one sale with that "title" . 
 	// and the Sale must be created in DB
@@ -125,9 +120,9 @@ public class CreateSaleBDBlackTest {
 	}
 	
 	@Test
-	//sut.createSale:  The title parameter has not letters
+	//sut.createSale:  The title parameter is ""
 	public void test3() {
-		title= "1234";
+		title= "";
 		testDA.open();
 		testDA.createSeller(sellerMail,sellerName);
 		testDA.close();
@@ -160,6 +155,42 @@ public class CreateSaleBDBlackTest {
 		    }
 	}
 	@Test
+	//sut.createSale:  The title parameter has not letters
+	public void test4() {
+		title= "1234";
+		testDA.open();
+		testDA.createSeller(sellerMail,sellerName);
+		testDA.close();
+		try {
+			//invoke System Under Test (sut)  
+			sut.open();
+			Sale s=sut.createSale(title, description, status, price, pubDate, sellerMail, null);
+			sut.close();
+			//sale is not created
+			assertTrue(s==null);
+			
+			//sale is not in DB
+			testDA.open();
+			boolean exist=testDA.existSale(sellerMail,title);
+			assertTrue(!exist);
+			testDA.close();
+			
+			} catch (ParamNullException | SaleAlreadyExistException  | MustBeLaterThanTodayException e ) { 
+		// if the program goes to this point fail  
+			e.printStackTrace();
+		    System.out.println("Error: " + e.getMessage());
+			fail();
+
+		}catch (Exception e) {
+				fail();
+			} finally {   
+				testDA.open();
+				testDA.removeSeller(sellerMail);
+				testDA.close();
+		    }
+	}
+	
+	@Test
 	//sut.createSale:  The description parameter is null
 	public void test5() {
 		description= null;
@@ -188,6 +219,10 @@ public class CreateSaleBDBlackTest {
 	//sut.createSale:  The description parameter is ""
 	public void test6() {
 		description= "";
+		testDA.open();
+		testDA.createSeller(sellerMail,sellerName);
+		testDA.close();
+		
 		try {
 			//invoke System Under Test (sut)  
 			sut.open();
@@ -210,12 +245,19 @@ public class CreateSaleBDBlackTest {
 
 		}catch (Exception e) {
 				fail();
-			} 
+			} finally {   
+				testDA.open();
+				testDA.removeSeller(sellerMail);
+				testDA.close();
+		    }
 	}
 	@Test
 	//sut.createSale:  The status > 3 
 	public void test7() {
 		status= 7;
+		testDA.open();
+		testDA.createSeller(sellerMail,sellerName);
+		testDA.close();
 		try {
 			//invoke System Under Test (sut)  
 			sut.open();
@@ -238,12 +280,20 @@ public class CreateSaleBDBlackTest {
 
 		}catch (Exception e) {
 				fail();
-			} 
+			} finally {   
+			testDA.open();
+			testDA.removeSeller(sellerMail);
+			testDA.close();
+	    }
 	}
 	@Test
 	//sut.createSale:  The price > 0 
 	public void test8() {
 		price= -20;
+		testDA.open();
+		testDA.createSeller(sellerMail,sellerName);
+		testDA.close();
+		
 		try {
 			//invoke System Under Test (sut)  
 			sut.open();
@@ -266,7 +316,11 @@ public class CreateSaleBDBlackTest {
 
 		}catch (Exception e) {
 				fail();
-			} 
+			} finally {   
+				testDA.open();
+				testDA.removeSeller(sellerMail);
+				testDA.close();
+		    }
 	}
 	@Test
 	//sut.createSale:  pubDate must be later that today 

@@ -1,6 +1,5 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -22,10 +21,11 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import dataAccess.DataAccess;
-import domain.Driver;
-import domain.Ride;
-import exceptions.RideAlreadyExistException;
-import exceptions.RideMustBeLaterThanTodayException;
+import domain.Sale;
+import domain.Seller;
+import exceptions.MustBeLaterThanTodayException;
+import exceptions.ParamNullException;
+import exceptions.SaleAlreadyExistException;
 
 public class CreateSaleMockWhiteTest {
 	
@@ -40,10 +40,18 @@ public class CreateSaleMockWhiteTest {
 	@Mock
     protected  EntityTransaction  et;
 	
+	private  Seller seller; 
+	private  String sellerMail;
+	private  String sellerName;
+	private  String title;
+	private  String description;
+	private  int status;
+	private  float price;
+	private  Date pubDate;
 
 	@Before
     public  void init() {
-        MockitoAnnotations.openMocks(this);
+		MockitoAnnotations.openMocks(this);
         persistenceMock = Mockito.mockStatic(Persistence.class);
 		persistenceMock.when(() -> Persistence.createEntityManagerFactory(Mockito.any()))
         .thenReturn(entityManagerFactory);
@@ -51,6 +59,24 @@ public class CreateSaleMockWhiteTest {
         Mockito.doReturn(db).when(entityManagerFactory).createEntityManager();
 		Mockito.doReturn(et).when(db).getTransaction();
 	    sut=new DataAccess(db);
+	    
+	    sellerMail="sellerTest@ehu.eus";
+		sellerName="Seller Test";
+		seller=new Seller(sellerMail,sellerName);
+		title="futbol baloia";
+		description="Used one hour";
+		status=0;
+		price=10;
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		pubDate=null;
+		try {
+			pubDate = sdf.parse("05/10/2026");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	    
+        Mockito.when(db.find(Seller.class, seller.getEmail())).thenReturn(seller);
     }
 	@After
     public  void tearDown() {
@@ -58,253 +84,145 @@ public class CreateSaleMockWhiteTest {
     }
 	
 	
-	Driver driver;
 	@Test
-	//sut.createRide:  The Driver is null. The test must return null. If  an Exception is returned the createRide method is not well implemented.
-		public void test1() {
-			try {
-				
-				//define parameters
-				driver=null;
-
-				String rideFrom="Donostia";
-				String rideTo="Zarautz";
-				
-				String driverUserName=null;
-
-				
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-				Date rideDate=null;;
-				try {
-					rideDate = sdf.parse("05/10/2026");
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}	
-				
-				Mockito.when(db.find(Driver.class, null)).thenReturn(null);
-
-				
-				//invoke System Under Test (sut)  
-				sut.open();
-				Ride ride=sut.createRide(rideFrom, rideTo, rideDate, 0, 0, driverUserName);
-
-				//verify the results
-				assertNull(ride);
-				
-			   } catch (RideAlreadyExistException e) {
-				// TODO Auto-generated catch block
-				// if the program goes to this point fail  
-				fail();
-
-				} catch (RideMustBeLaterThanTodayException e) {
-				// TODO Auto-generated catch block
-					fail();
-
-				} catch (Exception e) {
-					e.toString();
-				// TODO Auto-generated catch block
-					fail();
-
-				} finally {
-					sut.close();
-				}
+	//sut.createSale:  Some of the parameters are null
+	public void test1() {
+		description= null;
+		try {
+			//invoke System Under Test (sut)  
+			sut.open();
+			sut.createSale(title, description, status, price, pubDate, sellerMail, null);
+			sut.close();			
+			fail("The sale must not be created");
 			
-			   } 
-	
+			} catch (ParamNullException e ) { 
+			// if the program goes to this point true  
+				assertTrue(true);
+			} catch ( SaleAlreadyExistException  | MustBeLaterThanTodayException e ) { 
+		// if the program goes to this point fail  
+			e.printStackTrace();
+		    System.out.println("Error: " + e.getMessage());
+			fail();
+
+		}catch (Exception e) {
+				fail();
+			} 
+	}
 	@Test
-	//sut.createRide:  The Driver("Driver Test") does not exist in the DB. The test must return null 
-	//The test supposes that the "Driver Test" does not exist in the DB
+	//sut.createSale:  The seller must be in the DB 
 	public void test2() {
-
-
-        
-		String driverUsername="Driver Test";
-
-		String rideFrom="Donostia";
-		String rideTo="Zarautz";
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date rideDate=null;;
+		sellerMail="sellerFake";
 		try {
-			rideDate = sdf.parse("05/10/2026");
+			//invoke System Under Test (sut)  
+			sut.open();
+			Sale s=sut.createSale(title, description, status, price, pubDate, sellerMail, null);
+			sut.close();
+			//sale is not created
+			assertTrue(s==null);
+			
+			//sale is not in DB
+			
+			} catch (ParamNullException | SaleAlreadyExistException  | MustBeLaterThanTodayException e ) { 
+		// if the program goes to this point fail  
+			e.printStackTrace();
+		    System.out.println("Error: " + e.getMessage());
+			fail();
+
+		}catch (Exception e) {
+				fail();
+			} 
+	}
+	@Test
+	//sut.createSale:  pubDate must be later that today 
+	public void test3() {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		pubDate=null;
+		try {
+			pubDate = sdf.parse("05/10/2020");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 		try {
-					
-			 
-			//configure the state through mocks 
-	        Mockito.when(db.find(Driver.class, driverUsername)).thenReturn(null);
-		
-			
-	      //invoke System Under Test (sut)  
+			//invoke System Under Test (sut)  
 			sut.open();
-		    Ride r=sut.createRide(rideFrom, rideTo, rideDate, 0, 0, driverUsername);
+			sut.createSale(title, description, status, price, pubDate, sellerMail, null);
 			sut.close();
 			
-			assertNull(r);
-			
-		   } catch (RideAlreadyExistException e) {
-			 //verify the results
-				sut.close();
-				assertTrue(true);
-			} catch (RideMustBeLaterThanTodayException e) {
-			// TODO Auto-generated catch block
+			} catch ( MustBeLaterThanTodayException e ) { 
+		    // if the program goes to this point true  
+			assertTrue(true);
+
+		} catch (ParamNullException | SaleAlreadyExistException   e ) { 
+		// if the program goes to this point fail  
+			e.printStackTrace();
+		    System.out.println("Error: " + e.getMessage());
 			fail();
-		} 
-	} 
-	
+
+		}catch (Exception e) {
+				fail();
+			} 
+	}
 	@Test
-	//sut.createRide:  the date of the ride must be later than today. The RideMustBeLaterThanTodayException 
-		// exception must be thrown. 		
-	public void test3() {
-			try {
-				
-				//define parameters
-				driver=null;
+	//sut.createSale:  The Seller("sellerTest1@ehu.eus","Seller Test 1") HAS one sale with that title and the same "title" sale is created. 
 
-				String rideFrom="Donostia";
-				String rideTo="Zarautz";
-				
-				String driverUserName=null;
+	public void test4() {
+		sellerMail="sellerTest1@ehu.eus";
+		Seller s1=new Seller(sellerMail,"Seller Test 1");
+		s1.addSale(title, description, status, price, pubDate, null);
+        Mockito.when(db.find(Seller.class, s1.getEmail())).thenReturn(s1);
 
-				
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-				Date rideDate=null;;
-				try {
-					rideDate = sdf.parse("05/10/2018");
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}	
-				driver=new Driver(driverUserName,"123");
-		        Mockito.when(db.find(Driver.class, driver.getUsername())).thenReturn(driver);
+		try {	
+			//verify the results
+			sut.open();
+			sut.createSale(title, description, status, price, pubDate, sellerMail, null);
+			sut.close();
+			fail();
+			
+			} catch (SaleAlreadyExistException e ) { 
+			// if the program goes to this point true  
+				assertTrue(true);
 
-				
-				//invoke System Under Test (sut)  
-				sut.open();
-				Ride ride=sut.createRide(rideFrom, rideTo, rideDate, 0, 0, driverUserName);
-
-				//verify the results
-				assertNull(ride);
-				
-			   } catch (RideAlreadyExistException e) {
-				// TODO Auto-generated catch block
-				// if the program goes to this point fail  
+			} catch (ParamNullException  | MustBeLaterThanTodayException e ) { 
+			// if the program goes to this point fail  
+				e.printStackTrace();
+			    System.out.println("Error: " + e.getMessage());
 				fail();
 
-				} catch (RideMustBeLaterThanTodayException e) {
-					assertTrue(true);
-
-
-				} catch (Exception e) {
-					e.toString();
-				// TODO Auto-generated catch block
-					fail();
-
-				} finally {
-					sut.close();
-				}
-			
-			   } 
+			}catch (Exception e) {
+				fail();
+			}  		
+	}
 	@Test
-	//sut.createRide:  The Driver("Driver Test") HAS one ride "from" "to" in that "date". 
-	public void test4() {
+	//sut.createSale:  The Seller("sellerTest@ehu.eus","Seller Test") HAS  NOT one sale with that "title"" . 
+	// and the Sale must be created in DB
+	//The test supposes that the "Seller Test" does not exist in the DB
 
-
-        
-		String driverUsername="Driver Test";
-		String driverPassword="123";
-
-		String rideFrom="Donostia";
-		String rideTo="Zarautz";
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date rideDate=null;;
-		try {
-			rideDate = sdf.parse("05/10/2026");
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
-		try {
-					
-			 driver=new Driver(driverUsername,driverPassword);
-			 driver.addRide(rideFrom, rideTo, rideDate, 2, 10);
-			//configure the state through mocks 
-	        Mockito.when(db.find(Driver.class, driver.getUsername())).thenReturn(driver);
-		
-			
-			//invoke System Under Test (sut)  
-			sut.open();
-		    sut.createRide(rideFrom, rideTo, rideDate, 0, 0, driverUsername);
-			sut.close();
-			
-			fail();
-			
-		   } catch (RideAlreadyExistException e) {
-			 //verify the results
-				sut.close();
-				assertTrue(true);
-			} catch (RideMustBeLaterThanTodayException e) {
-			// TODO Auto-generated catch block
-			fail();
-		} 
-	} 
-	@Test
-	
-	//sut.createRide:  The Driver("Driver Test") HAS  NOT one ride "from" "to" in that "date". 
-	// and the Ride must be created in DB
-	//The test supposes that the "Driver Test" does not exist in the DB before the test
 	public void test5() {
-		//define parameters
-		String driverUsername="Driver Test";
-		String driverPassword="123";
 		
-		
-		String rideFrom="Donostia";
-		String rideTo="Zarautz";
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date rideDate=null;;
-		try {
-			rideDate = sdf.parse("05/10/2026");
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
 		
 		try {
-			Driver driver1=new Driver(driverUsername,driverPassword);
-
-			//configure the state through mocks 
-	        Mockito.when(db.find(Driver.class, driver1.getUsername())).thenReturn(driver1);
-					
 			//invoke System Under Test (sut)  
 			sut.open();
-			Ride ride=sut.createRide(rideFrom, rideTo, rideDate, 0, 0, driverUsername);
-			sut.close();
+			Sale sale=sut.createSale(title, description, status, price, pubDate, sellerMail, null);
+			sut.close();			
 			//verify the results
-			assertNotNull(ride);
-			assertEquals(ride.getFrom(),rideFrom);
-			assertEquals(ride.getTo(),rideTo);
-			assertEquals(ride.getDate(),rideDate);
+			assertNotNull(sale);
+			assertNotNull(sale);
+			assertEquals(sale.getTitle(),title);
+			assertEquals(sale.getDescription(),description);
+			assertEquals(sale.getStatus(),status);
 			
 			
-		   } catch (RideAlreadyExistException e) {
+			} catch (ParamNullException | SaleAlreadyExistException  | MustBeLaterThanTodayException e ) { 
 			// if the program goes to this point fail  
-			fail();
-			
-			} catch (RideMustBeLaterThanTodayException e) {
-				// if the program goes to this point fail  
+				e.printStackTrace();
+			    System.out.println("Error: " + e.getMessage());
+				fail();
 
-			fail();
-			//redone state of the system (create object in the database)
-			
-		} 
-	} 
-	
 
+			} catch (Exception e) {
+				fail();
+			} 
+	}
 }
