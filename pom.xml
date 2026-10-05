@@ -12,6 +12,7 @@
 				<configuration>
 					<testFailureIgnore>true</testFailureIgnore>
 					<argLine>-Duser.language=es -Duser.country=ES</argLine>
+					<argLine>-XX:+EnableDynamicAgentLoading</argLine>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -124,32 +125,32 @@
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy-agent -->
-		<dependency>
+	<!--	<dependency>
 			<groupId>net.bytebuddy</groupId>
 			<artifactId>byte-buddy-agent</artifactId>
 			<version>1.10.10</version>
 			<scope>test</scope>
-		</dependency>
+		</dependency>-->
 
-		<!-- https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy -->
+		<!-- https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy
 		<dependency>
 			<groupId>net.bytebuddy</groupId>
 			<artifactId>byte-buddy</artifactId>
 			<version>1.10.10</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.objenesis/objenesis-tck -->
+		</dependency> -->
+		<!-- https://mvnrepository.com/artifact/org.objenesis/objenesis-tck
 		<dependency>
 			<groupId>org.objenesis</groupId>
 			<artifactId>objenesis-tck</artifactId>
 			<version>3.0.1</version>
-		</dependency> 
+		</dependency> -->
 
 
 		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
 		<dependency>
 			<groupId>org.mockito</groupId>
-			<artifactId>mockito-inline</artifactId>
-			<version>3.4.0</version>
+			<artifactId>mockito-core</artifactId>
+			<version>5.14.0</version>
 			<scope>test</scope>
 		</dependency>
 
