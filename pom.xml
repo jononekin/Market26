@@ -72,7 +72,7 @@
 		<sonar.organization>jononekin</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<sonar.projectKey>jononekin_market-oct2</sonar.projectKey>
-		<sonar.token>3722a409e9de8147cef226722a1e8a779a0bb5b3</sonar.token>
+		<sonar.token>????????????????????????</sonar.token>
 	</properties>
 
 	<!-- https://mvnrepository.com/artifact/junit/junit -->
